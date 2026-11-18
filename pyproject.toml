@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "szl-abstention-frontier"
+version = "0.1.0"
+description = "Frontier abstention calibration: paired A/B eval harness for refusal on fabricated-premise traps vs benign controls"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+authors = [{ name = "Stephen Lutar", email = "stephen@szlholdings.com" }]
+dependencies = [
+  "torch>=2.6",
+  "transformers>=4.57",
+  "peft>=0.17",
+  "huggingface_hub>=0.30",
+]
+
+[project.urls]
+Homepage = "https://a-11-oy.com"
+Repository = "https://github.com/szl-holdings/szl-abstention-frontier"
+
+[project.scripts]
+szl-abstain-eval = "szl_abstention_frontier.evaluate:main"
+
+[tool.setuptools]
+packages = ["szl_abstention_frontier"]
+
+[tool.setuptools.package-dir]
+szl_abstention_frontier = "src"
+
+[tool.szl.release]
+import_names = ["szl_abstention_frontier"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+extend-exclude = ["build", "dist", ".venv"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"

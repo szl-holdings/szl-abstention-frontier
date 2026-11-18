@@ -1,0 +1,41 @@
+{
+  "source": "szl-train-chaski-r4-r2",
+  "new": "szl-train-chaski-r4-r3",
+  "env_var_keys": [
+    "HF_HOME",
+    "HF_TOKEN",
+    "JOB",
+    "PIP_BREAK_SYSTEM_PACKAGES"
+  ],
+  "env_values_masked": true,
+  "create_status": 201,
+  "create_body": "{\"autostart_policy\":false,\"container\":{\"command\":[\"bash\",\"-lc\",\"export PIP_DEFAULT_TIMEOUT=45 PIP_RETRIES=2; printf \\\"nameserver 1.1.1.1\\\\nnameserver 8.8.8.8\\\\n\\\" > /etc/resolv.conf 2>/dev/null || true; pip install -q huggingface_hub 2>&1 | tee /tmp/lane.log; cat > /tmp/hb.py <<PYEOF\\nimport sys, os\\nfrom huggingface_hub import HfApi\\nseq = sys.argv[1] if len(sys.argv) > 1 else 'x'\\ndata = open('/",
+  "verify_status": 200,
+  "verify": {
+    "name": "szl-train-chaski-r4-r3",
+    "replicas": 1,
+    "status": null,
+    "current_state": {
+      "description": "",
+      "finish_time": "2026-11-18T05:23:01.4229248+00:00",
+      "instance_status_counts": {
+        "allocating_count": 0,
+        "creating_count": 0,
+        "running_count": 0,
+        "stopping_count": 0
+      },
+      "start_time": "2026-11-18T05:23:01.4229248+00:00",
+      "status": "stopped"
+    }
+  },
+  "resources": {
+    "cpu": 4,
+    "gpu_classes": [
+      "a5db5c50-cbcb-4596-ae80-6a0c8090d80f",
+      "9998fe42-04a5-4807-b3a5-849943f16c38",
+      "6d4e9e99-d27e-4751-8d7d-393f7d8ea949"
+    ],
+    "memory": 32768,
+    "shm_size": 64
+  }
+}

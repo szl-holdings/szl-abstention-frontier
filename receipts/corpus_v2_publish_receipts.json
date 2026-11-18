@@ -1,0 +1,35 @@
+{
+  "repo": "SZLHOLDINGS/szl-distill-abstention-v2-sft",
+  "counts": {
+    "v1_abstention_pairs": 48,
+    "answerside_gpt4o_mini": 12,
+    "answerside_gpt4o": 12,
+    "total": 72
+  },
+  "uploads": [
+    {
+      "remote": "README.md",
+      "commit": "https://huggingface.co/datasets/SZLHOLDINGS/szl-distill-abstention-v2-sft/commit/20e317b17fdc4b87e1597d0f47e487c971ac3366"
+    },
+    {
+      "remote": "data/train.jsonl",
+      "commit": "https://huggingface.co/datasets/SZLHOLDINGS/szl-distill-abstention-v2-sft/commit/ffcb7b53059322d0c2fc16ceb8139175df0e39c5"
+    },
+    {
+      "remote": "seeds/answerside_openai_gpt4omini.jsonl",
+      "commit": "https://huggingface.co/datasets/SZLHOLDINGS/szl-distill-abstention-v2-sft/commit/5c934f495ffe90940da776f8e5d1f1514349e9bd"
+    },
+    {
+      "remote": "seeds/answerside_openai_gpt4o.jsonl",
+      "commit": "https://huggingface.co/datasets/SZLHOLDINGS/szl-distill-abstention-v2-sft/commit/fe5b88598c9f966c0de0dfe490438427b7ee5d44"
+    },
+    {
+      "remote": "receipts/answerside_gpt4omini_receipts.json",
+      "commit": "https://huggingface.co/datasets/SZLHOLDINGS/szl-distill-abstention-v2-sft/commit/ea73fba4c330be17963ed36e4395787ed43a3787"
+    },
+    {
+      "remote": "receipts/answerside_gpt4o_receipts.json",
+      "commit": "https://huggingface.co/datasets/SZLHOLDINGS/szl-distill-abstention-v2-sft/commit/e46c7be539558d4ac267a974dac4cfd1c47912aa"
+    }
+  ]
+}

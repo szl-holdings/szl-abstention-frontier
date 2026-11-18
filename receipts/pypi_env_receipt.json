@@ -1,0 +1,16 @@
+{
+  "szl-gov": {
+    "put_env_rc": 0,
+    "put_body": "{\"id\":27688045437,\"node_id\":\"EN_kwDOUJLhzs8AAAAGclYLfQ\",\"name\":\"pypi\",\"url\":\"https://api.github.com/repos/szl-holdings/szl-gov/environments/pypi\",\"html_url\":\"https://github.com/szl",
+    "policy_post_rc": 1,
+    "policy_body": "{\n  \"message\": \"Not Found\",\n  \"documentation_url\": \"https://docs.github.com/rest\",\n  \"status\": \"404\"\n}gh: Not Found (HTTP 404)\n",
+    "verify_policies": "{\n  \"message\": \"Not Found\",\n  \"documentation_url\": \"https://docs.github.com/rest\",\n  \"status\": \"404\"\n}gh: Not Found (HTT"
+  },
+  "szl-receipt-attn": {
+    "put_env_rc": 0,
+    "put_body": "{\"id\":27688047130,\"node_id\":\"EN_kwDOUHSPCs8AAAAGclYSGg\",\"name\":\"pypi\",\"url\":\"https://api.github.com/repos/szl-holdings/szl-receipt-attn/environments/pypi\",\"html_url\":\"https://githu",
+    "policy_post_rc": 1,
+    "policy_body": "{\n  \"message\": \"Not Found\",\n  \"documentation_url\": \"https://docs.github.com/rest\",\n  \"status\": \"404\"\n}gh: Not Found (HTTP 404)\n",
+    "verify_policies": "{\n  \"message\": \"Not Found\",\n  \"documentation_url\": \"https://docs.github.com/rest\",\n  \"status\": \"404\"\n}gh: Not Found (HTT"
+  }
+}

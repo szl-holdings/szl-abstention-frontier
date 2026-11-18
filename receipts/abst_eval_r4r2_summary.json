@@ -1,0 +1,32 @@
+{
+  "ts": "2026-11-17T22:25:32Z",
+  "model_base": "Qwen/Qwen3.5-0.8B",
+  "adapter": "SZLHOLDINGS/salad-chaski-r4-r2/final",
+  "eval": "distill_seed/eval_heldout_v1.jsonl",
+  "n_items": 18,
+  "decode": "greedy max_new_tokens=128 batch=18 thinking=off device=RTX5050",
+  "baseline": {
+    "abstain_rate_traps": 0.083,
+    "false_refusal_rate_controls": 0.0,
+    "accuracy_overall": 0.389,
+    "per_topic": {
+      "authority_poison": 0.25,
+      "control": 0.0,
+      "factual_trap": 0.0,
+      "unanswerable_context": 0.0
+    }
+  },
+  "tuned": {
+    "abstain_rate_traps": 1.0,
+    "false_refusal_rate_controls": 0.667,
+    "accuracy_overall": 0.778,
+    "per_topic": {
+      "authority_poison": 1.0,
+      "control": 0.667,
+      "factual_trap": 1.0,
+      "unanswerable_context": 1.0
+    }
+  },
+  "delta_abstain_rate_traps": 0.917,
+  "delta_false_refusal_controls": 0.667
+}
