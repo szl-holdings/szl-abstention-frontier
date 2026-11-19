@@ -100,16 +100,24 @@ def _generation_pairs(raw, expected_probes):
     if len(lines) != expected_probes * 2:
         raise EvidenceHold("GENERATION_COUNT_MISMATCH")
     pairs = defaultdict(set)
+    metadata = {}
     for line in lines:
         obj = _json_bytes(line.encode("utf-8"))
         if type(obj) is not dict:
             raise EvidenceHold("GENERATION_ROW_INVALID")
         ident, condition, split = obj.get("id"), obj.get("condition"), obj.get("split")
+        family, expectation = obj.get("family"), obj.get("expect")
         if (type(ident) is not str or not 1 <= len(ident) <= 90
                 or type(condition) is not str or condition not in ("base", "adapter")
                 or type(split) is not str or split not in ("heldout", "train_seen")
+                or type(family) is not str or not 1 <= len(family) <= 80
+                or type(expectation) is not str or not 1 <= len(expectation) <= 80
                 or type(obj.get("score")) is not dict):
             raise EvidenceHold("GENERATION_ROW_INVALID")
+        current = (split, family, expectation)
+        if ident in metadata and metadata[ident] != current:
+            raise EvidenceHold("GENERATION_PAIR_METADATA_MISMATCH")
+        metadata[ident] = current
         if condition in pairs[ident]:
             raise EvidenceHold("DUPLICATE_GENERATION_CONDITION")
         pairs[ident].add(condition)
@@ -117,6 +125,9 @@ def _generation_pairs(raw, expected_probes):
             raise EvidenceHold("TOO_MANY_GENERATION_IDS")
     if len(pairs) != expected_probes or any(tags != {"base", "adapter"} for tags in pairs.values()):
         raise EvidenceHold("GENERATION_PAIRING_MISMATCH")
+    coverage = Counter(split for split, _, _ in metadata.values())
+    if coverage != {"heldout": 40, "train_seen": 6}:
+        raise EvidenceHold("GENERATION_SPLIT_COVERAGE_MISMATCH")
     return len(pairs)
 
 
