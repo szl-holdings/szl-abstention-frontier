@@ -52,6 +52,8 @@ def synthetic(*, good=False):
                 "id": f"synthetic-{k:02d}",
                 "split": "heldout" if k < 40 else "train_seen",
                 "condition": condition,
+                "family": "factual_trap" if k < 20 else "control_plain",
+                "expect": "abstain" if k < 20 else "answer",
                 "score": {"pass": k % 2 == 0, "abstained": condition == "adapter"},
                 "output": "CONFIDENTIAL_SYNTHETIC_TEXT_NEVER_ECHO",
             })
@@ -178,6 +180,34 @@ class QualityGateTests(unittest.TestCase):
         gb = "".join(json.dumps(r) + "\n" for r in records).encode()
         receipt["files"]["generations.jsonl"] = hashlib.sha256(gb).hexdigest()
         with self.assertRaisesRegex(qualify.EvidenceHold, "DUPLICATE_GENERATION_CONDITION"):
+            qualify.evaluate_bundle(
+                *encode(receipt, summary, gb),
+                expected_repo=REPO,
+                expected_adapter_revision=ADAPTER_SHA,
+                expected_base_revision=BASE_SHA,
+            )
+
+    def test_cross_condition_label_mismatch_refused_even_when_file_hash_matches(self):
+        receipt, summary, records, _ = synthetic()
+        records[1]["expect"] = "different_label"
+        gb = "".join(json.dumps(row) + "\n" for row in records).encode("utf-8")
+        receipt["files"]["generations.jsonl"] = hashlib.sha256(gb).hexdigest()
+        with self.assertRaisesRegex(qualify.EvidenceHold, "GENERATION_PAIR_METADATA_MISMATCH"):
+            qualify.evaluate_bundle(
+                *encode(receipt, summary, gb),
+                expected_repo=REPO,
+                expected_adapter_revision=ADAPTER_SHA,
+                expected_base_revision=BASE_SHA,
+            )
+
+    def test_changed_split_counts_refused_even_with_consistent_pair_metadata(self):
+        receipt, summary, records, _ = synthetic()
+        # Alter one complete base/adapter pair, not only one of its members.
+        for row in records[:2]:
+            row["split"] = "train_seen"
+        gb = "".join(json.dumps(row) + "\n" for row in records).encode("utf-8")
+        receipt["files"]["generations.jsonl"] = hashlib.sha256(gb).hexdigest()
+        with self.assertRaisesRegex(qualify.EvidenceHold, "GENERATION_SPLIT_COVERAGE_MISMATCH"):
             qualify.evaluate_bundle(
                 *encode(receipt, summary, gb),
                 expected_repo=REPO,
