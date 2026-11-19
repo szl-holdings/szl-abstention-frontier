@@ -1,0 +1,192 @@
+name: eval-receipt-attest
+
+# Sigstore keyless attestation of eval receipts (szl.absteval.receipt/v1 and
+# sibling receipt files) via GitHub artifact attestations.
+#
+# - Identity: this repository's workflow file on refs/heads/main (OIDC). No
+#   keys, tokens or secrets are used or stored.
+# - Output: an in-toto Statement in a DSSE envelope, predicate type
+#   https://szl-holdings.dev/eval-receipt/v1, recorded in the public-good
+#   Sigstore transparency log (Rekor) because this repository is public.
+# - Fail-closed: any sha256 mismatch, missing file, non-main ref or download
+#   problem stops the job before anything is signed.
+# - This workflow only attests bytes. It never edits receipts, never changes
+#   status / promotion / signature fields, and does not touch any promotion
+#   gate or HOLD label. Clearing HOLD is a separate, later change.
+#
+# Verify: see docs/EVAL_RECEIPT_SIGNING.md
+#   gh attestation verify <file> --repo szl-holdings/szl-abstention-frontier \
+#     --signer-workflow szl-holdings/szl-abstention-frontier/.github/workflows/eval-receipt-attest.yml \
+#     --predicate-type https://szl-holdings.dev/eval-receipt/v1
+
+on:
+  workflow_dispatch:
+    inputs:
+      receipt:
+        description: "Repo-relative path to the receipt file, or a public https:// URL"
+        required: true
+        type: string
+      sha256:
+        description: "Expected sha256 of the receipt bytes (64 lowercase hex). Mismatch fails the run."
+        required: true
+        type: string
+  push:
+    branches: [main]
+    paths:
+      - "receipts/**"
+      - "eval/**/receipt.json"
+      - "eval/**/summary.json"
+
+permissions: {}
+
+concurrency:
+  group: eval-receipt-attest-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  attest:
+    # Identity is pinned to main: a dispatch from any other ref does nothing.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    steps:
+      # actions/checkout v7.0.1 (same pin as ci.yml)
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Resolve subjects and verify sha256 (fail-closed)
+        id: subjects
+        shell: bash
+        env:
+          EVENT: ${{ github.event_name }}
+          IN_RECEIPT: ${{ inputs.receipt }}
+          IN_SHA256: ${{ inputs.sha256 }}
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/attest"
+          sums="$RUNNER_TEMP/attest/checksums.txt"
+          : > "$sums"
+          hexre='^[0-9a-f]{64}$'
+
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            want="$(printf '%s' "$IN_SHA256" | tr 'A-F' 'a-f')"
+            [[ "$want" =~ $hexre ]] || { echo "::error::sha256 input must be 64 hex characters"; exit 1; }
+            if [[ "$IN_RECEIPT" == https://* ]]; then
+              f="$RUNNER_TEMP/attest/download"
+              curl --fail --silent --show-error --location --proto '=https' --tlsv1.2 \
+                --max-filesize 104857600 --max-time 120 -o "$f" -- "$IN_RECEIPT"
+              name="$(basename "${IN_RECEIPT%%\?*}")"
+            else
+              case "$IN_RECEIPT" in
+                /*|*..*) echo "::error::receipt path must be repo-relative without '..'"; exit 1 ;;
+              esac
+              f="$IN_RECEIPT"
+              [ -f "$f" ] || { echo "::error::receipt file not found: $f"; exit 1; }
+              name="$IN_RECEIPT"
+            fi
+            got="$(sha256sum -- "$f" | cut -d' ' -f1)"
+            if [ "$got" != "$want" ]; then
+              echo "::error::sha256 mismatch for $name: expected $want, got $got. Nothing was signed."
+              exit 1
+            fi
+            printf '%s  %s\n' "$got" "$name" >> "$sums"
+            echo "source=$IN_RECEIPT" >> "$GITHUB_OUTPUT"
+          else
+            # push to main: attest receipt files added or modified in this push.
+            if [ -z "${BEFORE//0/}" ] || ! git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+              range_files="$(git ls-files -- 'receipts/**' 'eval/**/receipt.json' 'eval/**/summary.json')"
+            else
+              range_files="$(git diff --name-only --diff-filter=AM "$BEFORE" "$AFTER" -- 'receipts/**' 'eval/**/receipt.json' 'eval/**/summary.json')"
+            fi
+            while IFS= read -r f; do
+              [ -n "$f" ] || continue
+              case "$f" in *.sha256) continue ;; esac
+              got="$(sha256sum -- "$f" | cut -d' ' -f1)"
+              # Optional sidecar "<file>.sha256": enforced when present.
+              if [ -f "$f.sha256" ]; then
+                want="$(cut -d' ' -f1 < "$f.sha256" | tr 'A-F' 'a-f')"
+                if [ "$got" != "$want" ]; then
+                  echo "::error::sha256 mismatch for $f vs $f.sha256: expected $want, got $got. Nothing was signed."
+                  exit 1
+                fi
+              fi
+              printf '%s  %s\n' "$got" "$f" >> "$sums"
+            done <<< "$range_files"
+            echo "source=push:$AFTER" >> "$GITHUB_OUTPUT"
+          fi
+
+          if [ ! -s "$sums" ]; then
+            echo "No receipt files to attest."
+            echo "count=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "count=$(wc -l < "$sums")" >> "$GITHUB_OUTPUT"
+          echo "checksums=$sums" >> "$GITHUB_OUTPUT"
+          echo "Subjects:"; cat "$sums"
+
+      - name: Build predicate
+        if: steps.subjects.outputs.count != '0'
+        id: predicate
+        shell: bash
+        env:
+          SOURCE: ${{ steps.subjects.outputs.source }}
+          SUMS: ${{ steps.subjects.outputs.checksums }}
+          REPO: ${{ github.repository }}
+          REF: ${{ github.ref }}
+          SHA: ${{ github.sha }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/attest/predicate.json"
+          python3 - "$out" <<'PY'
+          import json, os, sys
+          subjects = []
+          for line in open(os.environ["SUMS"], encoding="utf-8"):
+              digest, name = line.rstrip("\n").split("  ", 1)
+              entry = {"name": name, "sha256": digest}
+              # Echo (never modify) declared receipt fields when readable as JSON.
+              if os.path.isfile(name) and name.endswith(".json"):
+                  try:
+                      doc = json.load(open(name, encoding="utf-8"))
+                      if isinstance(doc, dict):
+                          entry["declared"] = {k: doc.get(k) for k in ("schema", "status", "promotion", "signature") if k in doc}
+                  except (ValueError, UnicodeDecodeError):
+                      pass
+              subjects.append(entry)
+          predicate = {
+              "predicate_version": "1",
+              "statement": "These receipt bytes were observed by this workflow with the listed sha256. This attests origin and integrity only; it does not change promotion, HOLD, MEASURED or production status.",
+              "source": os.environ["SOURCE"],
+              "subjects": subjects,
+              "builder": {
+                  "repository": os.environ["REPO"],
+                  "ref": os.environ["REF"],
+                  "commit": os.environ["SHA"],
+                  "workflow_ref": os.environ["WORKFLOW_REF"],
+                  "run_id": os.environ["RUN_ID"],
+                  "run_attempt": os.environ["RUN_ATTEMPT"],
+              },
+          }
+          json.dump(predicate, open(sys.argv[1], "w", encoding="utf-8"), indent=2, sort_keys=True)
+          PY
+          echo "path=$out" >> "$GITHUB_OUTPUT"
+          cat "$out"
+
+      # actions/attest v4.2.2
+      - name: Attest (Sigstore keyless, in-toto in DSSE)
+        if: steps.subjects.outputs.count != '0'
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6
+        with:
+          subject-checksums: ${{ steps.subjects.outputs.checksums }}
+          predicate-type: https://szl-holdings.dev/eval-receipt/v1
+          predicate-path: ${{ steps.predicate.outputs.path }}
