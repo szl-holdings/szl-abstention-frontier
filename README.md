@@ -35,6 +35,23 @@ counterexamples = 72 pairs) is training to close exactly that gap.
 
 **Acceptance gate (v2):** traps abstain >= 0.9 AND controls false-refusal <= 0.1.
 
+## Larger 46-probe review — research HOLD
+
+A newer independent-looking but still keyword-rubric-based comparison of the
+R4/R3 adapter was recorded November 19, 2026. On 46 probes / 92 generations,
+R4/R3 improved paired discrimination (3/8 vs 0/8 for R4/R2) and answerable
+controls (9/16 vs 2/16), but still over-refused on 3/16 controls and
+corrected only 3/8 factual traps. The Hub receipt explicitly states
+**UNSIGNED** and **promotion HOLD**. Do not equate the higher balanced score
+with production qualification.
+
+The original Python-only held-out verifier, **src/qualify.py**, checks retained
+local bundle hashes, exact model revisions, 46 distinct base/adapter pairs and
+numerator-denominator consistency. It reports proposed multi-axis quality
+bounds but **never authorizes promotion**, even when all numerical bounds pass.
+It does not execute models or download private outputs. See
+[held-out qualification methodology](docs/heldout-qualification.md).
+
 ## Artifacts (Hugging Face)
 
 - [SZLHOLDINGS/szl-distill-abstention-v1](https://huggingface.co/datasets/SZLHOLDINGS/szl-distill-abstention-v1) - v1 dual-teacher corpus (Claude + OpenAI), 48 pairs
