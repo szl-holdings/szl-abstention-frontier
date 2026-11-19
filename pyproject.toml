@@ -23,6 +23,7 @@ Repository = "https://github.com/szl-holdings/szl-abstention-frontier"
 
 [project.scripts]
 szl-abstain-eval = "szl_abstention_frontier.evaluate:main"
+szl-abstain-qualify = "szl_abstention_frontier.qualify:main"
 
 [tool.setuptools]
 packages = ["szl_abstention_frontier"]
