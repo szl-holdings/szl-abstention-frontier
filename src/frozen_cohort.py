@@ -174,9 +174,8 @@ def review_frozen_cohort(
         return _hold("OUTCOME_POPULATION_INCOMPLETE")
     expected = {row["case_sha256"]: row for row in cases}
     seen: set[str] = set()
-    answered = errors = abstained = 0
-    answerable = refused_answerable = 0
-    unanswerable = refused_unanswerable = 0
+    # Check the whole cohort's IDs before validating per-case bindings.
+    # Otherwise a duplicate can be misreported as question-content drift.
     for row in outcomes:
         if type(row) is not dict or set(row) != _OUTCOME_KEYS:
             return _hold("OUTCOME_SCHEMA_INVALID")
@@ -186,6 +185,13 @@ def review_frozen_cohort(
         if case_id in seen:
             return _hold("DUPLICATE_OUTCOME_CASE")
         seen.add(case_id)
+    if seen != set(expected):
+        return _hold("OUTCOME_IDS_DO_NOT_MATCH_FROZEN_COHORT")
+    answered = errors = abstained = 0
+    answerable = refused_answerable = 0
+    unanswerable = refused_unanswerable = 0
+    for row in outcomes:
+        case_id = row["case_sha256"]
         if (
             row["question_sha256"] != expected[case_id]["question_sha256"]
             or not _sha(row["question_sha256"], _SHA64)
