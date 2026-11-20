@@ -62,10 +62,13 @@ A model cannot drop a difficult answer and silently call the easier subset
 its entire benchmark. Both answerable and unanswerable cases are mandatory.
 
 An external reviewer must pin the complete manifest SHA256 **before**
-evaluation; the helper only compares caller-declared digests and labels.
-A positive `SOURCE_POPULATION_MATCH_UNATTESTED` is **not** independent
-correctness review, verified rights, a risk-coverage curve, training quality,
-model promotion or runtime authority. Its complete methodology and negative
+evaluation; the helper also requires each outcome to carry the declared
+question-content SHA256, model revision and single-run identity. It **refuses
+unpaired model-superiority claims** until an actual independently reviewed,
+preregistered two-run comparison exists. These are caller-declared digests
+and labels only. A positive `SOURCE_POPULATION_MATCH_UNATTESTED` is **not**
+independent correctness review, signed identity, verified rights,
+a risk-coverage curve, training quality, model promotion or runtime authority. Its complete methodology and negative
 controls are in [the frozen cohort contract](docs/unknown-surface-frozen-cohort.md).
 This does not replace or change the separate reviewed-risk source PR #6.
 
