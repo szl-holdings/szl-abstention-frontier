@@ -2,9 +2,9 @@
 
 **Status: source-only / unsigned / original SZL code / no runtime or training.**
 
-The present software checks only whether claimed evaluation outcomes cover the
-**same exact case population** that a separate, authorized evaluator pinned
-before model output. It does not independently review answer labels, verify a
+The present software checks only whether claimed evaluation outcomes cover
+**the same exact case population and the same declared model/run** that a
+separate authorized evaluator pinned before model output. It does not independently review answer labels, verify a
 signer, query a model, perform an evaluation, or establish production readiness.
 Any caller can forge every input to the function; trust requires an external,
 signed and independently verified receipt for the expected cohort digest.
@@ -40,22 +40,63 @@ This proposed source-only module:
    approved evaluation owner can pin that digest in an immutable receipt
    before attempting the experiment. A digest comparison has no signer,
    identity, date or trust-root authentication built in.
-5. Compares the complete outcome population: same count and exact case ID
-   set, no duplicates, no substitutions, strict boolean abstention
-   labels, strict boolean answer-correctness labels on answered rows,
-   and `None` for correctness when abstained.
-6. Reports a *single declared operating point* with explicit numerators,
+5. Requires a separate `szl.unknown-surface-run-claim/v1` binding:
+   the same cohort root, exact 40-hex model revision, one 64-hex run ID,
+   one claimed receipt hash and the same declared evaluator digest.
+   This is only syntax and equality checking, not a signed identity.
+6. Requires every outcome to bind to the **exact question-content SHA256**
+   from its frozen case, model revision and run ID; any unexpected outcome,
+   duplicate or substituted row is refused. Strict boolean abstention
+   and reviewed correctness labels remain mandatory.
+7. A source-only single-model operating point **cannot claim superiority**
+   over a baseline. The run claim must explicitly say
+   `comparison_claim=NONE`; any proposed `BEATS_BASELINE` claim
+   produces `COMPARATIVE_CLAIM_OUT_OF_SCOPE`. An approved comparative
+   study needs an entirely separate *paired baseline and candidate* protocol.
+8. Reports a *single declared operating point* with explicit numerators,
    denominators, coverage and conditional risk. A zero-answer cohort has
    **risk = null / UNAVAILABLE_ZERO_ANSWERED**, not a zero error claim.
 
 All results set `population_identity_authenticated=false`,
 `independent_review_verified=false`,
 `answer_correctness_verified=false`,
+`run_identity_authenticated=false`,
+`receipt_signature_verified=false`,
+`comparative_performance_proven=false`,
 `risk_coverage_curve_measured=false`,
 `model_quality_qualified=false`, and
 `training_or_release_authorized=false`. The strongest source outcome
 is `SOURCE_POPULATION_MATCH_UNATTESTED`, **not PASS, production or a valid
 scientific result**.
+
+## Kimi + Mistral cloud adversarial review and the remaining proof boundary
+
+Two bounded **read-only** model consultations through the existing Ollama
+cloud connection on Nov 20 returned distinct defects in the first draft:
+
+- **Kimi** identified cross-run/cross-model relabeling: the original
+  outcomes carried task IDs but no model or unique run binding. The
+  revised schema binds each row to the frozen *question-content SHA256*,
+  declared model revision and unique run ID, with a separate run claim
+  linked to a declared receipt and external cohort root. Negative tests
+  substitute the question, model and run independently.
+- **Mistral** identified single-run evidence being laundered into claims
+  that a model beat an unobserved baseline. The schema now explicitly
+  forbids comparative claims; a future evaluation needs two independently
+  receipted runs over the *same* frozen cohort, a preregistered metric,
+  significance/calibration threshold and baseline selection that were not
+  chosen using heldout results. New tests reject a claimed
+  `BEATS_BASELINE` and missing run receipt.
+
+**This is a code review and structural repair, not a cryptographic
+solution to dishonesty.** If an attacker consistently fabricates the entire
+cohort, run, case question hashes, receipt metadata and outcome labels,
+an unsigned comparator cannot detect the fraud. Only independently signed
+producer/observer evidence, live source/run readback, protected holdouts,
+a trusted evaluator, and verifiable external trust roots can establish actual
+run identity and correctness. Both model consultations were proposals;
+neither model ran tests, signed evidence, reviewed owner rights or
+authorized release.
 
 ## Declared arithmetic
 
