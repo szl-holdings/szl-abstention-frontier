@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/szl-holdings/szl-abstention-frontier/blob/main/unknownsurface/v1/manifest.schema.json",
+  "title": "PURIQ Unknown Surface Batch Manifest v1",
+  "description": "An append-only frozen batch of audit tasks. Any edit creates a NEW manifest id; superseded manifests remain readable history. Owner yes required per batch freeze.",
+  "type": "object",
+  "required": ["schema", "manifest_id", "frozen_ts", "task_count", "tasks", "corpus_sha256", "approver", "change_policy"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "szl.unknown-surface-manifest/v1" },
+    "manifest_id": { "type": "string", "pattern": "^usbatch_[A-Za-z0-9_-]+$" },
+    "supersedes": { "type": "string", "pattern": "^usbatch_[A-Za-z0-9_-]+$" },
+    "frozen_ts": { "type": "string", "format": "date-time" },
+    "task_count": { "type": "integer", "minimum": 1, "description": "AUDIT tasks only; EXAMPLE tasks counted separately below" },
+    "tasks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["task_id", "task_sha256"],
+        "properties": {
+          "task_id": { "type": "string", "pattern": "^ustask_[A-Za-z0-9_-]+$" },
+          "task_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "example_count": { "type": "integer", "minimum": 0 },
+    "corpus_sha256": { "type": "array", "items": { "type": "string", "pattern": "^[a-f0-9]{64}$" } },
+    "approver": {
+      "type": "object",
+      "required": ["subject", "approval_kind"],
+      "properties": {
+        "subject": { "type": "string" },
+        "approval_kind": { "const": "owner-yes-per-batch" },
+        "reference": { "type": "string", "description": "where the owner yes is recorded (queue id, receipt path)" }
+      },
+      "additionalProperties": false
+    },
+    "change_policy": { "const": "append-only-supersede; edit = new manifest_id; owner yes per freeze" }
+  }
+}
