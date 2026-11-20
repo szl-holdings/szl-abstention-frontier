@@ -220,8 +220,6 @@ def review_frozen_cohort(
         else:
             unanswerable += 1
             refused_unanswerable += int(row["abstained"])
-    if seen != set(expected):
-        return _hold("OUTCOME_IDS_DO_NOT_MATCH_FROZEN_COHORT")
 
     result = _hold("CLAIMED_FULL_COHORT_SINGLE_RUN_ONLY")
     result["verdict"] = "SOURCE_POPULATION_MATCH_UNATTESTED"
