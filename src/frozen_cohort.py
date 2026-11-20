@@ -66,7 +66,7 @@ def _manifest_reason(manifest: object) -> str | None:
             for key in ("case_sha256", "question_sha256", "domain_sha256")
         ):
             return "CASE_IDENTIFIER_INVALID"
-        if case["stratum"] not in _STRATA or type(case["stratum"]) is not str:
+        if type(case["stratum"]) is not str or case["stratum"] not in _STRATA:
             return "CASE_STRATUM_INVALID"
         case_id, q = case["case_sha256"], case["question_sha256"]
         if case_id in case_ids or q in question_ids:
