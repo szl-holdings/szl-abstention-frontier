@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/szl-holdings/szl-abstention-frontier/blob/main/unknownsurface/v1/task.schema.json",
+  "title": "PURIQ Unknown Surface Task v1",
+  "description": "One frozen audit task for the PURIQ Unknown Surface Audit (Kimi session-12 'one bet', three-brain adopted). Labels: ROADMAP until a manifest is frozen and owner-approved. No task is licensed data until its licensing block is verified.",
+  "type": "object",
+  "required": ["schema", "task_id", "domain", "prompt", "predeclared", "acceptable_evidence", "licensing", "frozen_ts", "manifest_id"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "szl.unknown-surface-task/v1" },
+    "class": { "enum": ["AUDIT", "EXAMPLE"], "description": "EXAMPLE tasks are synthetic archetypes, never counted in measured batches" },
+    "task_id": { "type": "string", "pattern": "^ustask_[A-Za-z0-9_-]+$" },
+    "domain": { "type": "string", "minLength": 1 },
+    "prompt": { "type": "string", "minLength": 1 },
+    "predeclared": {
+      "type": "object",
+      "required": ["known_or_unknown", "declared_by", "declared_ts"],
+      "properties": {
+        "known_or_unknown": { "enum": ["known", "unknown"], "description": "declared BEFORE any model runs on this task; unknown + refusal = correct behavior" },
+        "rationale": { "type": "string" },
+        "declared_by": { "type": "string" },
+        "declared_ts": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "acceptable_evidence": { "type": "array", "items": { "type": "string" }, "description": "what evidence would change the answer or support admission" },
+    "refusal_is_correct": { "type": "boolean", "description": "true when predeclared unknown: abstention scores, answering confabulates" },
+    "licensing": {
+      "type": "object",
+      "required": ["source", "license", "verified"],
+      "properties": {
+        "source": { "type": "string" },
+        "license": { "type": "string" },
+        "verified": { "type": "boolean", "description": "false = task may not enter a measured batch" }
+      },
+      "additionalProperties": false
+    },
+    "frozen_ts": { "type": "string", "format": "date-time" },
+    "manifest_id": { "type": "string", "pattern": "^usbatch_[A-Za-z0-9_-]+$" }
+  }
+}
