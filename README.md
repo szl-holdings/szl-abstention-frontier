@@ -52,6 +52,26 @@ bounds but **never authorizes promotion**, even when all numerical bounds pass.
 It does not execute models or download private outputs. See
 [held-out qualification methodology](docs/heldout-qualification.md).
 
+## Experimental Unknown Surface cohort integrity (source-only)
+
+The opt-in `szl_abstention_frontier.frozen_cohort` helper requires exact
+**pre-frozen question/stratum/case IDs** before calculating a single claimed
+risk/coverage operating point. It refuses incomplete, replaced, duplicated or
+modified cohort populations even when the submitted case count is unchanged.
+A model cannot drop a difficult answer and silently call the easier subset
+its entire benchmark. Both answerable and unanswerable cases are mandatory.
+
+An external reviewer must pin the complete manifest SHA256 **before**
+evaluation; the helper also requires each outcome to carry the declared
+question-content SHA256, model revision and single-run identity. It **refuses
+unpaired model-superiority claims** until an actual independently reviewed,
+preregistered two-run comparison exists. These are caller-declared digests
+and labels only. A positive `SOURCE_POPULATION_MATCH_UNATTESTED` is **not**
+independent correctness review, signed identity, verified rights,
+a risk-coverage curve, training quality, model promotion or runtime authority. Its complete methodology and negative
+controls are in [the frozen cohort contract](docs/unknown-surface-frozen-cohort.md).
+This does not replace or change the separate reviewed-risk source PR #6.
+
 ## Artifacts (Hugging Face)
 
 - [SZLHOLDINGS/szl-distill-abstention-v1](https://huggingface.co/datasets/SZLHOLDINGS/szl-distill-abstention-v1) - v1 dual-teacher corpus (Claude + OpenAI), 48 pairs
