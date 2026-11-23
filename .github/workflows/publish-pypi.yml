@@ -108,7 +108,7 @@ jobs:
     timeout-minutes: 15
     environment:
       name: pypi
-      url: https://pypi.org/project/szl-gov/${{ needs.build.outputs.version }}/
+      url: https://pypi.org/project/szl-abstention-frontier/${{ needs.build.outputs.version }}/
     permissions:
       id-token: write   # OIDC token for PyPI Trusted Publishing — the only credential
       contents: read
