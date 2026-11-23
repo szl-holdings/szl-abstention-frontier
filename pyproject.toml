@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "szl-abstention-frontier"
-version = "0.1.0"
+version = "0.1.1"
 description = "Frontier abstention calibration: paired A/B eval harness for refusal on fabricated-premise traps vs benign controls"
 readme = "README.md"
 requires-python = ">=3.11"
