@@ -20,13 +20,13 @@
     "revision": "f2565bac0e437511270a28202086d18ca38d0ebc",
     "sha256": "7538b87a173e4dd6fdfa1c2895d8a76cb035d7e2425c91777355d7690e3555d6",
     "rows": 26321,
-    "rows_used": 22776,
+    "rows_used": 20975,
     "role": "train",
     "license": "other (mix of SZLHOLDINGS sets; see prep_receipt licenses)",
-    "truncation_reason": "prepare_data.py policy + decontam: dropped {'KHIPU_GATED': 1962, 'RIGHTS_UNKNOWN': 944, 'LEAK_REGEX': 171, 'QUARANTINE': 1, 'PROBE_ID_LEAK': 3, 'DPO_DOCTRINE_PROBE_MATCH': 0}; 464 rows held as validation",
+    "truncation_reason": "prepare_data.py policy + decontam: dropped {'RIGHTS_AUDIT_UNKNOWN': 2203, 'RIGHTS_UNKNOWN': 793, 'NOT_CLEAN_ROOM': 1785, 'LEAK_REGEX': 134, 'QUARANTINE': 1, 'PROBE_ID_LEAK': 2, 'DPO_DOCTRINE_PROBE_MATCH': 0}; 428 rows held as validation",
     "derived_file": {
      "name": "sft_train.jsonl",
-     "sha256": "ff2b5007946b0cb7c3e6886e3f0142d7d236b0b8cbbd90133933622a1c7913e3"
+     "sha256": "8ae879d04b0c3a43fb6274f6beb492d249e507a2d25dec93e429707fe0a5143e"
     }
    },
    {
@@ -39,11 +39,11 @@
     "license": "apache-2.0",
     "derived_file": {
      "name": "dpo_train.jsonl",
-     "sha256": "ecd574fae4813fef7b077345255e3dfb360ac80973b668ab348ca8d66a25b187",
-     "pairs": 2492,
+     "sha256": "b28134554f876aa9e3c1fd00935fdf9e66ee0d503c6fb7e62c0017d59e6b3e99",
+     "pairs": 2489,
      "sides": {
-      "answer": 1492,
-      "abstain": 1000
+      "abstain": 1000,
+      "answer": 1489
      }
     }
    },
@@ -60,7 +60,7 @@
   ],
   "code": {
    "repo": "szl-holdings/szl-abstention-frontier",
-   "commit": "095381c16c1134f76b2ddac0635890b857a8d7c6",
+   "commit": "d2471bc2bdb0f540a4f9ed634b457e282aa7b03c",
    "entrypoint": "recipes/hamutaq-nemotron-4b/run_pipeline.sh",
    "entrypoint_sha256": "ef9365584884f2e4ca49a3647ef5b663c2812ad941edf00d3694fd80988f2953",
    "files_sha256": {
@@ -70,7 +70,7 @@
     "common.py": "1451c858d77cc4302c6696b28dd4dc9c73602623b1dd9f8474c45b204aa65080",
     "scoring.py": "67397de8d711e32493aed76af45cfbe9bad8cabb3cd37073b0e09855910802f4",
     "scoring_v2.py": "5df9ab0c4a01bd06d277253bb23f3c2c365a42ebbc8ca74b0a2145649481bc19",
-    "prepare_data.py": "1a7737c0fdc09841571d4ddccddaaed512338fa64c650776721b75e72430d1f6"
+    "prepare_data.py": "4076d7511579362902e6303b590d1d7c46c31fcb6b9fffe13eb8a1dd049f8fe6"
    }
   },
   "hardware": {
@@ -94,9 +94,9 @@
   },
   "contamination": {
    "verdict": "CLEAN_NOT_LAUNCHED",
-   "gate_report_sha256": "8742094d8a810c3c29ecfc37ed00b26bcc2b3350ee52f2c76089c3eb31361590",
-   "gate_report_dpo_sha256": "a4546abe75c888ca2b306706ecc1886373d11fc26f291ea08820051ebcf1ae3f",
-   "gate_train_sha256": "ff2b5007946b0cb7c3e6886e3f0142d7d236b0b8cbbd90133933622a1c7913e3"
+   "gate_report_sha256": "b8cce85df0fd3869ae89e2a0f9e055c8cdf656129168f26815cbabf9b671dfaa",
+   "gate_report_dpo_sha256": "ece6083954f144e2c8e00a351db1e375b4fb21c67bc228a4dbee3512f70dcc0b",
+   "gate_train_sha256": "8ae879d04b0c3a43fb6274f6beb492d249e507a2d25dec93e429707fe0a5143e"
   },
   "derived_license": "NVIDIA Nemotron Open Model License (weights/adapters) + NOTICE; code Apache-2.0",
   "recipe": {
@@ -105,8 +105,8 @@
     "dpo",
     "eval_v1_v2"
    ],
-   "sft_train_sha256": "ff2b5007946b0cb7c3e6886e3f0142d7d236b0b8cbbd90133933622a1c7913e3",
-   "dpo_train_sha256": "ecd574fae4813fef7b077345255e3dfb360ac80973b668ab348ca8d66a25b187",
+   "sft_train_sha256": "8ae879d04b0c3a43fb6274f6beb492d249e507a2d25dec93e429707fe0a5143e",
+   "dpo_train_sha256": "b28134554f876aa9e3c1fd00935fdf9e66ee0d503c6fb7e62c0017d59e6b3e99",
    "probes_v1_sha256": "2f498461a67d7a2910472dabda1d72c4a7c73fe065702cba94e988fb30e34097",
    "probes_v2_sha256": "7da9ac5a477610ae9c7662f0b03a0fe57853419e41f393d0afceaaa09df97f33",
    "reasoning": "off (enable_thinking=False)",
@@ -121,7 +121,7 @@
   }
  },
  "gate_report": {
-  "sha256": "8742094d8a810c3c29ecfc37ed00b26bcc2b3350ee52f2c76089c3eb31361590",
+  "sha256": "b8cce85df0fd3869ae89e2a0f9e055c8cdf656129168f26815cbabf9b671dfaa",
   "note": "report file stays private with the data"
  },
  "runtime": {
