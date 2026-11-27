@@ -1,0 +1,118 @@
+{
+ "schema": "szl.train.run-manifest/v1",
+ "run_id": "hamutaq-4b-nemotron3nano-sft-dpo-rtx4090-r1",
+ "model_name": "Hamut'aq-4B (registry line A, status Proposed)",
+ "pins_recorded_at_launch": true,
+ "base_model": {
+  "id": "nvidia/NVIDIA-Nemotron-3-Nano-4B-BF16",
+  "revision": "dfaf35de3e30f1867dd8dbc38a7fc9fb52d3914f",
+  "license_class": "custom_noted",
+  "license": "NVIDIA Nemotron Open Model License",
+  "weights_sha256": "55d4e2519456c4a9bddf596b0748d630e3b2ce6ff6f4c2b7ed3e07e2b00dad42"
+ },
+ "datasets": [
+  {
+   "id": "SZLHOLDINGS/szl-frontier-openprob-mix-v1",
+   "revision": "f2565bac0e437511270a28202086d18ca38d0ebc",
+   "sha256": "7538b87a173e4dd6fdfa1c2895d8a76cb035d7e2425c91777355d7690e3555d6",
+   "rows": 26321,
+   "rows_used": 22776,
+   "role": "train",
+   "license": "other (mix of SZLHOLDINGS sets; see prep_receipt licenses)",
+   "truncation_reason": "prepare_data.py policy + decontam: dropped {'KHIPU_GATED': 1962, 'RIGHTS_UNKNOWN': 944, 'LEAK_REGEX': 171, 'QUARANTINE': 1, 'PROBE_ID_LEAK': 3, 'DPO_DOCTRINE_PROBE_MATCH': 0}; 464 rows held as validation",
+   "derived_file": {
+    "name": "sft_train.jsonl",
+    "sha256": "ff2b5007946b0cb7c3e6886e3f0142d7d236b0b8cbbd90133933622a1c7913e3"
+   }
+  },
+  {
+   "id": "SZLHOLDINGS/doctrine-abstention-dpo-v2",
+   "revision": "dfe70f8ac4f4c0ac5c06218482290f1960af9932",
+   "sha256": "0229224a9a4759d21a34d5d4c69455567adf4311c635ac8d143524597ed17914",
+   "rows": 62,
+   "rows_used": 62,
+   "role": "train",
+   "license": "apache-2.0",
+   "derived_file": {
+    "name": "dpo_train.jsonl",
+    "sha256": "ecd574fae4813fef7b077345255e3dfb360ac80973b668ab348ca8d66a25b187",
+    "pairs": 2492,
+    "sides": {
+     "answer": 1492,
+     "abstain": 1000
+    }
+   }
+  },
+  {
+   "id": "szl-heldout-v1+v2 probes (private file, never on the public repo)",
+   "revision": "5817bc3520c6d6a9c1ce60c94959af1c7a2f645d",
+   "revision_kind": "git blob sha1 of the private file (no Hub revision exists)",
+   "sha256": "42366694d2e7ebdfe3ac5c197017ff6820dc0dd655a3aed4afbf1ff67e09ce83",
+   "rows": 124,
+   "rows_used": 124,
+   "role": "holdout",
+   "license": "proprietary (SZL)"
+  }
+ ],
+ "code": {
+  "repo": "szl-holdings/szl-abstention-frontier",
+  "commit": "095381c16c1134f76b2ddac0635890b857a8d7c6",
+  "entrypoint": "recipes/hamutaq-nemotron-4b/run_pipeline.sh",
+  "entrypoint_sha256": "ef9365584884f2e4ca49a3647ef5b663c2812ad941edf00d3694fd80988f2953",
+  "files_sha256": {
+   "train_sft.py": "940beb939b4aa5abefbf7940f848485149d083be080dd4d3060e27026791ecca",
+   "train_dpo.py": "c9c7426fd475e5ffb2940fc17c2d938595e749072e4e34a83e29cdc58458e0de",
+   "run_eval.py": "72e00652c52cbe519a6ec9399aed13fc4c291d597f1f710a7d74c6259ea65f50",
+   "common.py": "1451c858d77cc4302c6696b28dd4dc9c73602623b1dd9f8474c45b204aa65080",
+   "scoring.py": "67397de8d711e32493aed76af45cfbe9bad8cabb3cd37073b0e09855910802f4",
+   "scoring_v2.py": "5df9ab0c4a01bd06d277253bb23f3c2c365a42ebbc8ca74b0a2145649481bc19",
+   "prepare_data.py": "1a7737c0fdc09841571d4ddccddaaed512338fa64c650776721b75e72430d1f6"
+  }
+ },
+ "hardware": {
+  "provider": "salad",
+  "gpu": "RTX 4090 24GB",
+  "count": 1,
+  "price_usd_per_hour": "UNKNOWN",
+  "price_source": "Salad API returns 401 since Nov 19; list $0.347-0.44/h is UNVERIFIED -> launch refused until priced"
+ },
+ "budget": {
+  "max_usd": 5.0,
+  "max_hours": 8.0,
+  "stop_rule": "kill at first of max_hours wall clock or max_usd; each stage gets only the remaining time",
+  "approval_ref": "PENDING-STEPHEN-YES"
+ },
+ "output": {
+  "visibility": "private",
+  "push_to_hub": false,
+  "overwrite_existing": false,
+  "checkpoint_policy": "adapters + receipts kept on the host only; no optimizer state (single-session run)"
+ },
+ "contamination": {
+  "verdict": "CLEAN_NOT_LAUNCHED",
+  "gate_report_sha256": "8742094d8a810c3c29ecfc37ed00b26bcc2b3350ee52f2c76089c3eb31361590",
+  "gate_report_dpo_sha256": "a4546abe75c888ca2b306706ecc1886373d11fc26f291ea08820051ebcf1ae3f",
+  "gate_train_sha256": "ff2b5007946b0cb7c3e6886e3f0142d7d236b0b8cbbd90133933622a1c7913e3"
+ },
+ "derived_license": "NVIDIA Nemotron Open Model License (weights/adapters) + NOTICE; code Apache-2.0",
+ "recipe": {
+  "stages": [
+   "sft",
+   "dpo",
+   "eval_v1_v2"
+  ],
+  "sft_train_sha256": "ff2b5007946b0cb7c3e6886e3f0142d7d236b0b8cbbd90133933622a1c7913e3",
+  "dpo_train_sha256": "ecd574fae4813fef7b077345255e3dfb360ac80973b668ab348ca8d66a25b187",
+  "probes_v1_sha256": "2f498461a67d7a2910472dabda1d72c4a7c73fe065702cba94e988fb30e34097",
+  "probes_v2_sha256": "7da9ac5a477610ae9c7662f0b03a0fe57853419e41f393d0afceaaa09df97f33",
+  "reasoning": "off (enable_thinking=False)",
+  "lora_targets": [
+   "q_proj",
+   "k_proj",
+   "v_proj",
+   "o_proj",
+   "up_proj",
+   "down_proj"
+  ]
+ }
+}

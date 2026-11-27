@@ -1,0 +1,7 @@
+{
+ "schema": "szl.train.run-manifest.validation/v1",
+ "verdict": "VALID_NOT_LAUNCHED",
+ "errors": 0,
+ "warnings": 0,
+ "findings": []
+}
