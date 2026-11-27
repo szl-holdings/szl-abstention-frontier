@@ -24,12 +24,15 @@ and Chakana's confirmation of the hard cap.
    (`szl-frontier-sft-mix-v4` 800, `governed-sft-mix-v2` 747, `clinical-abstention-sft-api-v2` 151, `high-value-systems-corpus-v1` 505 = 2,203);
    the remaining API/distillation rows whose rights are UNKNOWN (793; with clinical-api-v2 these are the original 944, still awaiting Stephen);
    non-Khipu sets the Nov 26 audit marks **not clean-room** (`unified-corpus-v1`, `flagship55-sft-v1`, `axiom-invariants-sft-v1/-v2`: 1,785);
-   the heldout-v2 topic regex (134) and any probe match (2 id-leak rows). Result: **20,975 train / 428 val rows**.
-   **Khipu is included** (Stephen, Nov 27 2026 12:08 AM ET, "Khipu needs to be in all of them"): 1,960 rows from khipu-structure-sft-v1 (800),
-   -v2 (800), khipu-scholars-sft-v1 (254) and khipu-v2-abstention-curriculum (106; 2 of 108 hit the heldout-v2 topic regex).
-   khipu-structure-sft-v1/-v2 carry the same "not clean-room" audit flag; they are in on the owner's directive and the output stays
-   **release-HOLD** until that flag is ruled on. `--exclude-khipu` reproduces a Khipu-free build. The earlier build (22,776 / 464,
-   sft sha `ff2b5007…`) is preserved in git history.
+   **Khipu label bug:** khipu-structure-sft-v1/-v2 square long-knot values (L4.04 counted as 16; KH0001 c5 val=5016 for S1000×5 + L4),
+   so their 1,600 rows are dropped (`LABEL_BUG`) and Khipu structure comes from the fixed `khipu-structure-sft-v3@5f132a07`
+   (`--khipu-v3`, sha-checked `bee9baa1…`; its 2,307 train prompt/completion rows).
+   The heldout-v2 topic regex drops 134 and probe id leaks 2. Result: **21,668 train / 442 val rows**.
+   **Khipu is included** (Stephen, Nov 27 2026 12:08 AM ET, "Khipu needs to be in all of them"): 2,667 rows = khipu-structure-sft-v3 (2,307),
+   khipu-scholars-sft-v1 (254), khipu-v2-abstention-curriculum (106; 2 of 108 hit the heldout-v2 topic regex).
+   khipu-structure-sft-v3 carries a residual clinical/PHI review flag (Amaru, USE-WITH-CONDITIONS), so any checkpoint trained on
+   this build is **not-for-release** until that is cleared. `--exclude-khipu` reproduces a Khipu-free build. Earlier builds
+   (22,776 / 464 `ff2b5007…`; 20,975 / 428 `8ae879d0…`) are preserved in git history.
    **Open rights finding on the container itself:** Qullqa's phase-0 RIGHTS.csv (Nov 27) lists `szl-frontier-openprob-mix-v1` as
    RIGHTS_GAP (license `other`, archived "do not train new lanes"). Its rows are re-filtered per source above, but a ruling on using this
    container (or switching to the proposed full-dataset `szl-all-mix-v1`, built per dataset at pinned revisions) is still needed before launch.
@@ -39,7 +42,7 @@ and Chakana's confirmation of the hard cap.
    20.2M trainable params. Mamba `in_proj/out_proj` is an opt-in ablation (`--lora-mamba`). Loss on the final assistant turn only,
    reasoning off, 2 epochs, lr 1e-4, max_len 2048, 4,096-token micro-batches × 8 accumulation, chunked CE (no full-vocab logits), OOM guard.
 3. **DPO** (`train_dpo.py`): SFT adapter merged; fresh LoRA r=16; sigmoid DPO β=0.1, lr 2e-5, 1 epoch; reference = the merged SFT model.
-   2,489 pairs: 1,489 answer-side (chosen = reference answer, rejected = needless refusal; targets the measured failure, 4/6 false refusals)
+   2,500 pairs: 1,500 answer-side (chosen = reference answer, rejected = needless refusal; targets the measured failure, 4/6 false refusals)
    and 1,000 abstain-side (62 from `doctrine-abstention-dpo-v2@dfe70f8a`, the rest open-problem rows vs. a fabricated "it was proved" answer).
    Rejected sides are templated (offline proxy). An on-policy refresh and GRPO are later stages.
 4. **Eval** (`run_eval.py`): base configurable (default the pinned Nemotron), adapters stackable (`sft+dpo`), scores heldout-v1 (`scoring.py`)

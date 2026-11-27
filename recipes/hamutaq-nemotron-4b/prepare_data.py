@@ -47,11 +47,19 @@ RIGHTS_AUDIT_UNKNOWN = {"szlholdings/szl-frontier-sft-mix-v4", "szlholdings/gove
 NOT_CLEAN_ROOM = {"szlholdings/unified-corpus-v1", "szlholdings/flagship55-sft-v1", "szlholdings/axiom-invariants-sft-v1",
                   "szlholdings/axiom-invariants-sft-v2", "szlholdings/axiom-invariant-corpus-v2"}
 
+# Long-knot values are squared in these two versions (L4.04 counted as 16; e.g. KH0001 c5 val=5016 for S1000x5 + L4).
+# Dropped always; Khipu structure comes from the fixed khipu-structure-sft-v3 via --khipu-v3 instead.
+LABEL_BUG = {"szlholdings/khipu-structure-sft-v1", "szlholdings/khipu-structure-sft-v2"}
+KHIPU_V3_REPO, KHIPU_V3_REV = "SZLHOLDINGS/khipu-structure-sft-v3", "5f132a078aa89f79836d4950554d631a1af13885"
+KHIPU_V3_SHA = "bee9baa1ec4a0c29328085bed3c521cd81a5fec4957a4d1a4fc96ec8b4259a5f"  # khipu_structure_sft_v3.jsonl
+
 
 def policy(src):
     s = src.lower()
     if s.endswith("/governed-distill-sft-v1"):
         return "QUARANTINE"
+    if s in LABEL_BUG:
+        return "LABEL_BUG"
     if s in RIGHTS_AUDIT_UNKNOWN:
         return "RIGHTS_AUDIT_UNKNOWN"
     if s in NOT_CLEAN_ROOM:
@@ -138,6 +146,7 @@ def main():
     ap.add_argument("--include-khipu", dest="include_khipu", action="store_true", default=True,
                     help="default ON (Stephen, Nov 27 2026); kept for backward-compatible invocations")
     ap.add_argument("--exclude-khipu", dest="include_khipu", action="store_false")
+    ap.add_argument("--khipu-v3", help=f"local copy of {KHIPU_V3_REPO}@{KHIPU_V3_REV[:8]} khipu_structure_sft_v3.jsonl (sha-checked)")
     ap.add_argument("--val-frac", type=float, default=0.02)
     ap.add_argument("--dpo-answer", type=int, default=1500)
     ap.add_argument("--dpo-abstain", type=int, default=1000)
@@ -150,6 +159,16 @@ def main():
     if sha256_bytes(raw) != MIX_SHA:
         raise SystemExit("MIX_SHA_MISMATCH (fail closed)")
     rows = [json.loads(l) for l in raw.decode().splitlines() if l.strip()]
+    mix_rows = len(rows)
+    if a.include_khipu and a.khipu_v3:
+        kraw = open(a.khipu_v3, "rb").read()
+        if sha256_bytes(kraw) != KHIPU_V3_SHA:
+            raise SystemExit("KHIPU_V3_SHA_MISMATCH (fail closed)")
+        for l in kraw.decode().splitlines():
+            k = json.loads(l) if l.strip() else None
+            if k and k.get("split") == "train" and k.get("prompt") and k.get("completion"):
+                rows.append({"messages": [{"role": "user", "content": k["prompt"]}, {"role": "assistant", "content": k["completion"]}],
+                             "src_dataset": KHIPU_V3_REPO, "sha": sha256_bytes(json.dumps(k, sort_keys=True).encode())})
     probes = []
     for p in (a.probes_v1, a.probes_v2):
         probes += [json.loads(l) for l in open(p, encoding="utf-8") if l.strip()]
@@ -159,7 +178,7 @@ def main():
     for r in rows:
         src = r.get("src_dataset", "?")
         pol = policy(src)
-        if pol in ("QUARANTINE", "RIGHTS_AUDIT_UNKNOWN", "NOT_CLEAN_ROOM") or (pol == "RIGHTS_UNKNOWN" and not a.include_rights_unknown) or (pol == "KHIPU_GATED" and not a.include_khipu):
+        if pol in ("QUARANTINE", "LABEL_BUG", "RIGHTS_AUDIT_UNKNOWN", "NOT_CLEAN_ROOM") or (pol == "RIGHTS_UNKNOWN" and not a.include_rights_unknown) or (pol == "KHIPU_GATED" and not a.include_khipu):
             drop[pol] += 1; drop_by_src[src] += 1; continue
         if LEAK.search(" ".join(m["content"] for m in r["messages"])):
             drop["LEAK_REGEX"] += 1; continue
@@ -230,14 +249,15 @@ def main():
                        "train_sha256": rep["train"]["sha256"], "holdout_sha256": rep["holdout"]["sha256"]}
     receipt = {
         "schema": "szl.hamutaq.data-prep/v1", "status": "MEASURED", "signature": "UNSIGNED", "at": now(),
-        "inputs": {"mix": {"repo": MIX_REPO, "revision": MIX_REV, "sha256": MIX_SHA, "rows": len(rows)},
+        "inputs": {"mix": {"repo": MIX_REPO, "revision": MIX_REV, "sha256": MIX_SHA, "rows": mix_rows},
+                   "khipu_v3": {"repo": KHIPU_V3_REPO, "revision": KHIPU_V3_REV, "sha256": KHIPU_V3_SHA, "used": bool(a.include_khipu and a.khipu_v3)},
                    "dpo_doctrine": {"repo": DPO_REPO, "revision": DPO_REV, "sha256": sha256_bytes(doc_raw), "rows": len(doc)},
                    "probes_v1_sha256": sha256_file(a.probes_v1), "probes_v2_sha256": sha256_file(a.probes_v2),
                    "probes_rows": len(probes), "leak_regex_sha256": sha256_bytes(LEAK.pattern.encode())},
         "policy": {"include_rights_unknown": a.include_rights_unknown, "include_khipu": a.include_khipu, "seed": a.seed,
                    "rights_audit_unknown": sorted(RIGHTS_AUDIT_UNKNOWN), "not_clean_room_dropped": sorted(NOT_CLEAN_ROOM),
-                   "flagged_included": {"khipu not-clean-room (owner directive Nov 27 2026; release HOLD until ruled)":
-                                        ["SZLHOLDINGS/khipu-structure-sft-v1", "SZLHOLDINGS/khipu-structure-sft-v2"],
+                   "flagged_included": {"not-for-release: residual clinical/PHI review flag (Amaru ASSETS.csv USE-WITH-CONDITIONS)":
+                                        [KHIPU_V3_REPO],
                                         "share-alike cc-by-sa-4.0 (attribution + SA obligations on release)": ["SZLHOLDINGS/absrl-reward-squad2-v1", "openprob:wikipedia"]}},
         "dropped": dict(drop), "dropped_by_policy_source": dict(drop_by_src),
         "outputs": {n: {"sha256": sha256_file(p), "rows": sum(1 for _ in open(p, encoding="utf-8"))} for n, p in paths.items()},
