@@ -1,0 +1,157 @@
+{
+ "schema": "szl.hamutaq.data-prep/v1",
+ "status": "MEASURED",
+ "signature": "UNSIGNED",
+ "at": "2026-11-27T04:14:05.842660+00:00",
+ "inputs": {
+  "mix": {
+   "repo": "SZLHOLDINGS/szl-frontier-openprob-mix-v1",
+   "revision": "f2565bac0e437511270a28202086d18ca38d0ebc",
+   "sha256": "7538b87a173e4dd6fdfa1c2895d8a76cb035d7e2425c91777355d7690e3555d6",
+   "rows": 26321
+  },
+  "dpo_doctrine": {
+   "repo": "SZLHOLDINGS/doctrine-abstention-dpo-v2",
+   "revision": "dfe70f8ac4f4c0ac5c06218482290f1960af9932",
+   "sha256": "0229224a9a4759d21a34d5d4c69455567adf4311c635ac8d143524597ed17914",
+   "rows": 62
+  },
+  "probes_v1_sha256": "2f498461a67d7a2910472dabda1d72c4a7c73fe065702cba94e988fb30e34097",
+  "probes_v2_sha256": "7da9ac5a477610ae9c7662f0b03a0fe57853419e41f393d0afceaaa09df97f33",
+  "probes_rows": 124,
+  "leak_regex_sha256": "bce8da3ad82a29c00f13753b647481f3d4203b10e839f632d8707058cf8eba3a"
+ },
+ "policy": {
+  "include_rights_unknown": false,
+  "include_khipu": false,
+  "seed": 20261126
+ },
+ "dropped": {
+  "KHIPU_GATED": 1962,
+  "RIGHTS_UNKNOWN": 944,
+  "LEAK_REGEX": 171,
+  "QUARANTINE": 1,
+  "PROBE_ID_LEAK": 3,
+  "DPO_DOCTRINE_PROBE_MATCH": 0
+ },
+ "dropped_by_policy_source": {
+  "SZLHOLDINGS/khipu-structure-sft-v1": 800,
+  "SZLHOLDINGS/killinchu-osint-sft-api-v1": 128,
+  "SZLHOLDINGS/khipu-structure-sft-v2": 800,
+  "SZLHOLDINGS/szl-distill-abstention-v3-calib": 80,
+  "SZLHOLDINGS/khipu-scholars-sft-v1": 254,
+  "SZLHOLDINGS/physics-tutor-sft-api-v1": 151,
+  "SZLHOLDINGS/world-science-sft-api-v1": 68,
+  "SZLHOLDINGS/clinical-abstention-sft-api-v2": 151,
+  "SZLHOLDINGS/szl-distill-abstention-v1": 47,
+  "SZLHOLDINGS/creativity-sft-api-v2": 116,
+  "SZLHOLDINGS/acoustic-governance-sft-api-v1": 99,
+  "SZLHOLDINGS/khipu-v2-abstention-curriculum": 108,
+  "SZLHOLDINGS/governed-distill-4b-sft-v1": 4,
+  "SZLHOLDINGS/governed-distill-4b-sft-v3": 28,
+  "SZLHOLDINGS/governed-distill-4b-sft-v3-topup": 15,
+  "SZLHOLDINGS/szl-distill-abstention-v2-sft": 18,
+  "SZLHOLDINGS/clinical-abstention-sft-api-v1": 37,
+  "SZLHOLDINGS/governed-distill-sft-v1": 1,
+  "SZLHOLDINGS/governed-distill-4b-sft-v2": 2
+ },
+ "outputs": {
+  "sft_train.jsonl": {
+   "sha256": "ff2b5007946b0cb7c3e6886e3f0142d7d236b0b8cbbd90133933622a1c7913e3",
+   "rows": 22776
+  },
+  "sft_val.jsonl": {
+   "sha256": "bb219f2114e43f78ac5f7dfc34dc321cc2b5aaa4cd8f039117f38e4951736cb9",
+   "rows": 464
+  },
+  "dpo_train.jsonl": {
+   "sha256": "ecd574fae4813fef7b077345255e3dfb360ac80973b668ab348ca8d66a25b187",
+   "rows": 2492
+  }
+ },
+ "sft_per_source_top": [
+  [
+   "SZLHOLDINGS/absrl-reward-squad2-v1",
+   1524
+  ],
+  [
+   "openprob:fc-grounded",
+   1171
+  ],
+  [
+   "openprob:wikipedia",
+   1049
+  ],
+  [
+   "SZLHOLDINGS/frontier-mix-v6-rebalanced",
+   789
+  ],
+  [
+   "SZLHOLDINGS/szl-quant-sft-v1",
+   787
+  ],
+  [
+   "SZLHOLDINGS/physics-curriculum-train",
+   785
+  ],
+  [
+   "SZLHOLDINGS/vgl-triang-20261116",
+   784
+  ],
+  [
+   "SZLHOLDINGS/lean-math-sft-v1",
+   784
+  ],
+  [
+   "SZLHOLDINGS/muhu-methodology-sft-v2",
+   782
+  ],
+  [
+   "SZLHOLDINGS/unified-corpus-v1",
+   781
+  ],
+  [
+   "SZLHOLDINGS/unified-corpus-v2",
+   778
+  ],
+  [
+   "SZLHOLDINGS/flagship55-sft-v1",
+   777
+  ]
+ ],
+ "dpo_sides": {
+  "answer": 1492,
+  "abstain": 1000
+ },
+ "dpo_doctrine_pairs": 62,
+ "dpo_note": "rejected sides are templated refusals/fabrications (offline proxy), not model samples",
+ "holdout": {
+  "rows": 124,
+  "sha256": "42366694d2e7ebdfe3ac5c197017ff6820dc0dd655a3aed4afbf1ff67e09ce83",
+  "seal_sha256": "2914f489cfbc96bee45e63f19befb9cb9604cbcde01b4506acff6813c751e67a"
+ },
+ "contamination_gate": {
+  "tool": "szl-forge tools/contamination_gate.py (PR #795 head 65c3ade6, vendored)",
+  "sft": {
+   "verdict": "CLEAN_NOT_LAUNCHED",
+   "codes": [],
+   "report_sha256": "8742094d8a810c3c29ecfc37ed00b26bcc2b3350ee52f2c76089c3eb31361590",
+   "train_sha256": "ff2b5007946b0cb7c3e6886e3f0142d7d236b0b8cbbd90133933622a1c7913e3",
+   "holdout_sha256": "42366694d2e7ebdfe3ac5c197017ff6820dc0dd655a3aed4afbf1ff67e09ce83"
+  },
+  "sft_val": {
+   "verdict": "CLEAN_NOT_LAUNCHED",
+   "codes": [],
+   "report_sha256": "38d60f2fde17cc71faa2c03ff87adff7873829a97f4bdf204d7f0221085cf791",
+   "train_sha256": "bb219f2114e43f78ac5f7dfc34dc321cc2b5aaa4cd8f039117f38e4951736cb9",
+   "holdout_sha256": "42366694d2e7ebdfe3ac5c197017ff6820dc0dd655a3aed4afbf1ff67e09ce83"
+  },
+  "dpo": {
+   "verdict": "CLEAN_NOT_LAUNCHED",
+   "codes": [],
+   "report_sha256": "a4546abe75c888ca2b306706ecc1886373d11fc26f291ea08820051ebcf1ae3f",
+   "train_sha256": "8b5e4af0329d5f84813dde9ee627c311c9287d48411412441f675403269bab89",
+   "holdout_sha256": "42366694d2e7ebdfe3ac5c197017ff6820dc0dd655a3aed4afbf1ff67e09ce83"
+  }
+ }
+}

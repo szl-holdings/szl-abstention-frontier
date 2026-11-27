@@ -1,0 +1,12 @@
+Hamut'aq-4B (SZL Holdings) is a derivative of NVIDIA-Nemotron-3-Nano-4B-BF16
+(nvidia/NVIDIA-Nemotron-3-Nano-4B-BF16, revision dfaf35de3e30f1867dd8dbc38a7fc9fb52d3914f).
+
+Licensed by NVIDIA Corporation under the NVIDIA Nemotron Model License.
+
+The base model is governed by the NVIDIA Nemotron Open Model License:
+https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-nemotron-open-model-license/
+A copy of that License must accompany any distributed weights or adapters (section 3a), and NVIDIA's
+copyright, patent, trademark and attribution notices must be retained (section 3b).
+
+The training and evaluation code in this directory is SZL Holdings code under Apache-2.0
+(see the repository LICENSE). Apache-2.0 does not apply to the model weights or adapters.
