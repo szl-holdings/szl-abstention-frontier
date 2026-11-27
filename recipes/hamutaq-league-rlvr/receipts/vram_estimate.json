@@ -1,0 +1,49 @@
+{
+ "label": "ESTIMATE (arithmetic from pinned configs; not measured on GPU)",
+ "base_params": 1006672704,
+ "base_bf16_GB": 1.88,
+ "lora_rank": 16,
+ "lora_params_per_adapter": 10223616,
+ "per_adapter_train_state_GB": 0.152,
+ "vocab": 248320,
+ "logits_peak_per_microbatch_GB": 4.75,
+ "kv_bytes_per_token": 12288,
+ "linear_attn_state_bytes_per_seq": 18874368,
+ "rollout": {
+  "G": 8,
+  "prompts_per_policy_round": 8,
+  "max_new_tokens": 256,
+  "max_prompt_tokens": 1024,
+  "micro_batch": 8
+ },
+ "layouts": {
+  "2main+1exploiter": {
+   "A_shared_base_multiLoRA_GB": 17.9,
+   "B_separate_TRL_processes_GB": 46.7,
+   "A_fits_48GB_with_6GB_headroom": true,
+   "B_fits": false
+  },
+  "4main+1exploiter": {
+   "A_shared_base_multiLoRA_GB": 18.2,
+   "B_separate_TRL_processes_GB": 77.8,
+   "A_fits_48GB_with_6GB_headroom": true,
+   "B_fits": false
+  },
+  "6main+1exploiter": {
+   "A_shared_base_multiLoRA_GB": 18.5,
+   "B_separate_TRL_processes_GB": 109.0,
+   "A_fits_48GB_with_6GB_headroom": true,
+   "B_fits": false
+  },
+  "8main+1exploiter": {
+   "A_shared_base_multiLoRA_GB": 18.9,
+   "B_separate_TRL_processes_GB": 140.1,
+   "A_fits_48GB_with_6GB_headroom": true,
+   "B_fits": false
+  }
+ },
+ "mixed_base_with_nemotron4b": {
+  "weights_bf16_GB": 7.95,
+  "note": "Nemotron-3-Nano-4B: base 7.95 GB (pinned LFS size). Trainer ~ 8 + 6-8 activations/logits (vocab 131k) + vLLM copy 8 + caches ~3 = ~25-28 GB alone (ESTIMATE; 12-16 GB training-only estimate from PR #14 is unmeasured)."
+ }
+}

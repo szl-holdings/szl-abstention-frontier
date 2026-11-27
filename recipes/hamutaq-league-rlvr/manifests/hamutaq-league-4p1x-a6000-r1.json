@@ -1,0 +1,171 @@
+{
+ "run": "hamutaq-league-4p1x-a6000-r1",
+ "status": "FALLBACK_READY_FOR_APPROVAL",
+ "host": "szl-mesh-a6000-1126 (Massed A6000 48GB)",
+ "description": "Fallback if the smoke stage shows vLLM multi-LoRA cannot serve Qwen3.5 (HF generate is ~4x slower): 4 policies + exploiter get more rounds each.",
+ "layout": "A, 5 adapters",
+ "config": {
+  "file": "configs/league_4p1x.json",
+  "sha256": "9f680a33b7d6b6f0b108f9f1587473156597dc3a206edd400c6fd86b57d7b3b8",
+  "policies": [
+   "m2_kalai_full",
+   "m3_kalai_full_seed22",
+   "m4_drgrpo_full",
+   "m6_khipu_heavy",
+   "x_exploiter"
+  ]
+ },
+ "base": {
+  "repo": "Qwen/Qwen3.5-0.8B",
+  "revision": "2fc06364715b967f1860aea9cf38778875588b17",
+  "license": "apache-2.0",
+  "model.safetensors_bytes": 1746942600,
+  "model.safetensors_lfs_sha256": "04b1c301231dd422b8860db31311ab2721511346a32cb1e079c4c4e5f1fe4696"
+ },
+ "warm_start": {
+  "name": "Hamut'aq-0.8B SFT LoRA (r32/a64, q,k,v,o) from chaski-0.8b-run-2026-11-26",
+  "host_path": "$HOME/szl-run-hamutaq-y2-sft/out/final",
+  "sha256": "computed at launch by merge_sft.py -> merged/merge_receipt.json",
+  "status": "release hold lifted by Stephen t186u; commercial-release check on API-teacher provider terms still open",
+  "fallback": "run_league.sh <cfg> --no-sft (clean base) if the SFT did not finish cleanly"
+ },
+ "data": {
+  "files": {
+   "pool.jsonl": "5ae624330923753da00330684eb487d18fa923f3aa10e6cea247711cd13559bc",
+   "dev_v3.jsonl": "896ae6808401f76fe6223250c0d54bfe33e82cdaacf19da9d500eb143b513077",
+   "receipt_store.json": "fc088e02583f075c00da83072e3b9654dea206d137af328c888ba4ae4617efbd",
+   "sealed_blocklist.json": "d6529130e5ca0ce5831fecb990389f29a16d20c4ba82498b297a198860f3a4b7",
+   "build_receipt.json": "66536eb16b2b4ad407f6729f4677b0615fb75c24831521186188b2cfa63da51c"
+  },
+  "dev_v3_commit": {
+   "sha256_of_file_is_hidden_until_reveal": true,
+   "commitment": "1497f0e98213a5d2032bffc4981702317c8165c3e8fbec0bd631119f9f997873",
+   "scheme": "sha256(salt_hex + sha256(dev_v3.jsonl))"
+  },
+  "pool_rows": 12069,
+  "dev_rows": 355,
+  "api_teacher_rows": 39,
+  "api_teacher_note": "szl-distill-abstention-v1-sft rows tagged api_teacher; allowed by Stephen t186u; provider terms limit training competing models - check before commercial release",
+  "sources": {
+   "governed-grounded-sft-v1": {
+    "repo": "SZLHOLDINGS/governed-grounded-sft-v1",
+    "revision": "8e466f849954a971a138ead89e49b5f9558f8c39",
+    "sha256": "ec5eaf2630c8a9809524b21bfc48fccf18d01673700511df691b4728a544743f",
+    "license": "apache-2.0",
+    "rights": "RIGHTS_OK",
+    "used": true
+   },
+   "absrl-reward-pool-v2-1": {
+    "repo": "SZLHOLDINGS/absrl-reward-pool-v2-1",
+    "revision": "cdbc6b91e25dda733e6ac4af4ec6a0c865655268",
+    "sha256": "e9ff2cbc194e993d9cfbcd49ec43d7f68ba2bf3b629f4c94f130a2964a599c79",
+    "license": "apache-2.0",
+    "rights": "RIGHTS_OK",
+    "used": true
+   },
+   "absrl-reward-squad2-v1": {
+    "repo": "SZLHOLDINGS/absrl-reward-squad2-v1",
+    "revision": "2229e259b0333928ff4c07f13e3540ae70e39567",
+    "sha256": "5de79f86ecaa0e5da41286a4fbd020aafb23a61ceab43e008d1d5e172f849a99",
+    "license": "cc-by-sa-4.0",
+    "rights": "RIGHTS_OK_SHARE_ALIKE",
+    "used": false
+   },
+   "khipu-structure-sft-v3": {
+    "repo": "SZLHOLDINGS/khipu-structure-sft-v3",
+    "revision": "5f132a078aa89f79836d4950554d631a1af13885",
+    "sha256": "bee9baa1ec4a0c29328085bed3c521cd81a5fec4957a4d1a4fc96ec8b4259a5f",
+    "license": "mit",
+    "rights": "RIGHTS_OK",
+    "used": true
+   },
+   "khipu-v2-abstention-curriculum/train.abstain": {
+    "repo": "SZLHOLDINGS/khipu-v2-abstention-curriculum",
+    "revision": "8066f2ed025cf3ac0ba565d57596dc65596cdfcb",
+    "sha256": "e4fb22e9e13e8016c7e1fd5aebc71e109195bf774b67650c9b0d6d724c7b4d36",
+    "license": "apache-2.0",
+    "rights": "RIGHTS_OK",
+    "used": true
+   },
+   "khipu-v2-abstention-curriculum/adversarial": {
+    "repo": "SZLHOLDINGS/khipu-v2-abstention-curriculum",
+    "revision": "8066f2ed025cf3ac0ba565d57596dc65596cdfcb",
+    "sha256": "8ae9fed7f8bb85234b0bbad217ddb2b7018670b8c80974f58aed95bc3faa0f1d",
+    "license": "apache-2.0",
+    "rights": "RIGHTS_OK",
+    "used": true
+   },
+   "szl-distill-abstention-v1-sft": {
+    "repo": "SZLHOLDINGS/szl-distill-abstention-v1-sft",
+    "revision": "72a471e38dafd7244719f18d351d0bf6974d3a7d",
+    "sha256": "30e74cc368eb6d4ccf30795789b6fdbf9e63aee1e8515c354e114866a57e48fe",
+    "license": "apache-2.0",
+    "rights": "API_TEACHER_ALLOWED_STEPHEN_t186u",
+    "used": true
+   },
+   "doctrine-abstention-dpo-v2": {
+    "repo": "SZLHOLDINGS/doctrine-abstention-dpo-v2",
+    "revision": "dfe70f8ac4f4c0ac5c06218482290f1960af9932",
+    "sha256": "0229224a9a4759d21a34d5d4c69455567adf4311c635ac8d143524597ed17914",
+    "license": "apache-2.0",
+    "rights": "RIGHTS_OK",
+    "used": true
+   }
+  },
+  "excluded_rights_unknown": [
+   "SZLHOLDINGS/szl-frontier-sft-mix-v4",
+   "SZLHOLDINGS/governed-sft-mix-v2",
+   "SZLHOLDINGS/clinical-abstention-sft-api-v2"
+  ],
+  "share_alike_off_by_default": "SZLHOLDINGS/absrl-reward-squad2-v1 (cc-by-sa-4.0)",
+  "dev_v3_salt": "dev_v3.salt.SECRET stays on the box/host; never committed; revealed only by tournament.py after training"
+ },
+ "code_sha256": {
+  "rewards.py": "69d7030a7e930dc729581ae5286d63f211a76f2b697f4cde9adf7ae692889de6",
+  "test_rewards.py": "e036423ec3a2cc78f338a04079f00e64400a55b277a4901bf400d61b810b8ebb",
+  "build_prompts.py": "aae46b7b46e37d241ab10ba23e8cae14c1ad84342ddd82432ece9588e5435acc",
+  "league_grpo.py": "8061cf339becdcb8ddcddeb43ed8244c07f2a0959b38d515a2bb3a4448144b08",
+  "tournament.py": "46e217f922fb01975e438c1a2042f56d0ed02f5f0fb85bd2a5b6695e0e824fff",
+  "replay_receipts.py": "f334035ac875ca93a53a2ca40a8b81e6b4adf331114e33f196947bcb7d736388",
+  "merge_sft.py": "9b53f8e537e4f896883b962f526c96237a51343d52da861b5523e6267d6228f3",
+  "run_league.sh": "69482ef01e05fb88a7a460f34aecae77ab7dd9f6779baaccb815d27258054348",
+  "requirements-gpu.txt": "883432f5d7bee005514a0eafdcd1f4d691de2c426d5b17304257d0c187eaf7e5",
+  "dryrun_cpu.py": "d74a660a5a772aa3edc83308190c0fc8d128b91e19434555073682400c15f47b",
+  "vram_estimate.py": "ce3a8fe992efb4725d51f2e76b7c0855499affbdcbb5bef71c3d6dd1ccf7bd4c"
+ },
+ "verifier_version": "hamutaq-league-rlvr/rewards@1",
+ "budget": {
+  "rate_usd_per_h": 0.57,
+  "hard_stop_s": 27000,
+  "hard_stop_usd": 4.27,
+  "train_budget_min": 270,
+  "expected_h_ESTIMATE": 5.6,
+  "expected_usd_ESTIMATE": 3.19,
+  "cap_usd": 5.0,
+  "enforced_by": "timeout -k 120 HARD_STOP_S in run_league.sh + --budget-min wall clock in league_grpo.py"
+ },
+ "outputs_on_host": [
+  "league/adapters/final/*",
+  "league/rollouts.jsonl",
+  "league/merkle.jsonl",
+  "league/train_receipt.json",
+  "tournament/selection.json",
+  "tournament/tournament.json",
+  "SHA256SUMS"
+ ],
+ "labels": {
+  "signing": "UNSIGNED",
+  "promotion": "HOLD / NOT-FOR-RELEASE until Stephen reviews tournament gates",
+  "upload": "none (no HF token on host)"
+ },
+ "ledger_row_draft": {
+  "ts_utc": "<fill at launch>",
+  "actor": "Saywa",
+  "action": "launch hamutaq-league-4p1x-a6000-r1",
+  "host": "szl-mesh-a6000-1126 (Massed A6000 48GB)",
+  "cap_usd": 5.0,
+  "hard_stop_usd": 4.27,
+  "approval": "<Stephen's message id naming this run>"
+ },
+ "approval_required": "Stephen's own yes naming 'hamutaq-league-4p1x-a6000-r1' with the $5 cap, after Hamut'aq SFT exit; ledger row written BEFORE launch."
+}

@@ -1,0 +1,131 @@
+{
+ "schema": "szl.league.dryrun-cpu/v1",
+ "at": "2026-11-27T05:34:05Z",
+ "reward_selftests": {
+  "ok": true,
+  "s": 0.0,
+  "failed": 0
+ },
+ "data_build_receipt": {
+  "ok": true,
+  "s": 0.0,
+  "pool_rows": 12069,
+  "dev_rows": 355
+ },
+ "gold_selfconsistency": {
+  "ok": true,
+  "s": 0.4,
+  "items": 12424,
+  "canonical_gold_not_correct": 0
+ },
+ "tiny_model": {
+  "ok": true,
+  "s": 3.7,
+  "dir": "<local>/tiny-qwen3_5",
+  "params": 16040508,
+  "vocab": 248320,
+  "arch": "Qwen3_5ForCausalLM",
+  "chat_template_ok": true
+ },
+ "gradient_path_all_losses": {
+  "ok": true,
+  "s": 1.2,
+  "dapo": {
+   "loss": 0.0,
+   "grad_norm": 1.417464,
+   "adapter_isolated": true
+  },
+  "dr_grpo": {
+   "loss": 0.0,
+   "grad_norm": 4.307905,
+   "adapter_isolated": true
+  },
+  "gspo": {
+   "loss": 0.0,
+   "grad_norm": 3.02885,
+   "adapter_isolated": true
+  }
+ },
+ "league_2_rounds_3mains_1exploiter": {
+  "ok": true,
+  "s": 10.8,
+  "rounds": 2,
+  "elo_dev_v3": {
+   "m2_kalai_full": 1000.0,
+   "m4_drgrpo_full": 1000.0,
+   "m5_gspo_full": 1000.0
+  },
+  "last_round": {
+   "round": 2,
+   "at": "2026-11-27T05:34:17Z",
+   "elapsed_min": 0.1,
+   "x_exploiter": {
+    "reward_mean": -1.0,
+    "valid_probes": 0,
+    "skipped": "all groups zero-variance or truncated",
+    "merkle": "da04d367710cb703"
+   },
+   "m2_kalai_full": {
+    "reward_mean": -2.0,
+    "outcomes": {
+     "wrong": 4
+    },
+    "skipped": "all groups zero-variance or truncated",
+    "merkle": "55b432d5c21ee36e"
+   },
+   "m4_drgrpo_full": {
+    "reward_mean": -2.0,
+    "outcomes": {
+     "wrong": 4
+    },
+    "skipped": "all groups zero-variance or truncated",
+    "merkle": "807cb6cd798f3f46"
+   },
+   "m5_gspo_full": {
+    "reward_mean": -2.0,
+    "outcomes": {
+     "wrong": 4
+    },
+    "skipped": "all groups zero-variance or truncated",
+    "merkle": "f387f6d820d06754"
+   },
+   "league": {
+    "dev_mean": {
+     "m2_kalai_full": -3.0,
+     "m4_drgrpo_full": -3.0,
+     "m5_gspo_full": -3.0
+    },
+    "elo": {
+     "m2_kalai_full": 1000.0,
+     "m4_drgrpo_full": 1000.0,
+     "m5_gspo_full": 1000.0
+    }
+   }
+  }
+ },
+ "receipt_replay_T1": {
+  "ok": true,
+  "s": 0.5,
+  "rows": 32,
+  "rescored": 24,
+  "merkle_rounds": 8,
+  "n_mismatch": 0,
+  "merkle_mismatch": 0
+ },
+ "tournament_smoke": {
+  "ok": true,
+  "s": 34.1,
+  "selected": "m2_kalai_full",
+  "dev_v3_reveal_ok": true,
+  "bradley_terry_sealed": {
+   "sft": 1000.0,
+   "m2_kalai_full": 1000.0,
+   "m4_drgrpo_full": 1000.0,
+   "m5_gspo_full": 1000.0
+  },
+  "promotion": "HOLD (at least one gate not PASS on its Wilson bound)",
+  "note": "limit=6 items per set: code-path check only"
+ },
+ "ok": true,
+ "note": "CPU, tiny random model (real tokenizer): validates code paths, data, rewards, receipts, tournament. NOT quality, NOT GPU memory, NOT vLLM."
+}
