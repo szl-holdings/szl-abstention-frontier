@@ -20,15 +20,26 @@ and Chakana's confirmation of the hard cap.
 
 ## Recipe (TRAINING-PLAN.md line A: SFT → DPO → [GRPO later])
 1. **Data** (`prepare_data.py`, CPU): the same mix the Chaski runs used, `SZLHOLDINGS/szl-frontier-openprob-mix-v1@f2565bac` (sha `7538b87a…`), minus
-   fail-closed exclusions: `governed-distill-sft-v1` (quarantined), API/distillation-generated rows whose rights are UNKNOWN (944),
-   Khipu rows (GATED line, 1,962), the heldout-v2 topic regex (171), and any probe match (3 id-leak rows). Result: 22,776 train / 464 val rows.
+   fail-closed exclusions: `governed-distill-sft-v1` (quarantined, 1); **rights UNKNOWN per Qullqa's phase-0 audit / Amaru**
+   (`szl-frontier-sft-mix-v4` 800, `governed-sft-mix-v2` 747, `clinical-abstention-sft-api-v2` 151, `high-value-systems-corpus-v1` 505 = 2,203);
+   the remaining API/distillation rows whose rights are UNKNOWN (793; with clinical-api-v2 these are the original 944, still awaiting Stephen);
+   non-Khipu sets the Nov 26 audit marks **not clean-room** (`unified-corpus-v1`, `flagship55-sft-v1`, `axiom-invariants-sft-v1/-v2`: 1,785);
+   the heldout-v2 topic regex (134) and any probe match (2 id-leak rows). Result: **20,975 train / 428 val rows**.
+   **Khipu is included** (Stephen, Nov 27 2026 12:08 AM ET, "Khipu needs to be in all of them"): 1,960 rows from khipu-structure-sft-v1 (800),
+   -v2 (800), khipu-scholars-sft-v1 (254) and khipu-v2-abstention-curriculum (106; 2 of 108 hit the heldout-v2 topic regex).
+   khipu-structure-sft-v1/-v2 carry the same "not clean-room" audit flag; they are in on the owner's directive and the output stays
+   **release-HOLD** until that flag is ruled on. `--exclude-khipu` reproduces a Khipu-free build. The earlier build (22,776 / 464,
+   sft sha `ff2b5007…`) is preserved in git history.
+   **Open rights finding on the container itself:** Qullqa's phase-0 RIGHTS.csv (Nov 27) lists `szl-frontier-openprob-mix-v1` as
+   RIGHTS_GAP (license `other`, archived "do not train new lanes"). Its rows are re-filtered per source above, but a ruling on using this
+   container (or switching to the proposed full-dataset `szl-all-mix-v1`, built per dataset at pinned revisions) is still needed before launch.
    Decontaminated against heldout-v1 (46) and heldout-v2 (78) probes; the szl-forge contamination gate (#795, vendored) returns
    **CLEAN_NOT_LAUNCHED** for SFT, val and DPO. Probe files are private and are never committed here; only their hashes are.
 2. **SFT** (`train_sft.py`): LoRA r=32/α=64 on `q_proj k_proj v_proj o_proj` (4 attention blocks) and `up_proj down_proj` (17 MLP blocks),
    20.2M trainable params. Mamba `in_proj/out_proj` is an opt-in ablation (`--lora-mamba`). Loss on the final assistant turn only,
    reasoning off, 2 epochs, lr 1e-4, max_len 2048, 4,096-token micro-batches × 8 accumulation, chunked CE (no full-vocab logits), OOM guard.
 3. **DPO** (`train_dpo.py`): SFT adapter merged; fresh LoRA r=16; sigmoid DPO β=0.1, lr 2e-5, 1 epoch; reference = the merged SFT model.
-   2,492 pairs: 1,492 answer-side (chosen = reference answer, rejected = needless refusal; targets the measured failure, 4/6 false refusals)
+   2,489 pairs: 1,489 answer-side (chosen = reference answer, rejected = needless refusal; targets the measured failure, 4/6 false refusals)
    and 1,000 abstain-side (62 from `doctrine-abstention-dpo-v2@dfe70f8a`, the rest open-problem rows vs. a fabricated "it was proved" answer).
    Rejected sides are templated (offline proxy). An on-policy refresh and GRPO are later stages.
 4. **Eval** (`run_eval.py`): base configurable (default the pinned Nemotron), adapters stackable (`sft+dpo`), scores heldout-v1 (`scoring.py`)
@@ -63,6 +74,8 @@ Proposed cap for the A6000 run: **$5.00 and 8 h** (8 h × $0.57 = $4.56). Massed
 It should fit a 24 GB RTX 4090 (the larger-vocab Qwen 4B peaked at 17.6 GB there). If it OOMs, use `--tok-budget 2048`. Not measured on a GPU yet.
 
 ## CPU dry-run (`dryrun_cpu.py`, receipt `receipts/dryrun_cpu.json`)
+
+> The dry-run receipt was measured on the Nov 26 (Khipu-excluded) data build. Code paths are unchanged; re-run it on the Nov 27 build before launch.
 The full 4B model does not fit the prep box's free RAM, so the dry-run checks every one of the 262 checkpoint tensors against the native
 model built on the meta device (0 missing, 0 shape mismatches), range-fetches the real weights for embeddings, lm_head and one block of each
 kind (Mamba-2 layer 0, MLP layer 1, attention layer 12), loads them natively (no missing keys), verifies the reasoning-off template matches the

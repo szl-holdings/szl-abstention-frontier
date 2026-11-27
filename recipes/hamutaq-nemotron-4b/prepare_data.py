@@ -6,9 +6,13 @@ CPU only. Reads local files; downloads nothing; writes nothing to the Hub.
 
 SFT  = SZLHOLDINGS/szl-frontier-openprob-mix-v1 (the mix the Chaski 0.8B/4B/9B runs used), minus
        * QUARANTINE   governed-distill-sft-v1 (TRAINING-PLAN.md: "do not train on"), always dropped
+       * RIGHTS_AUDIT_UNKNOWN  szl-frontier-sft-mix-v4, governed-sft-mix-v2, clinical-abstention-sft-api-v2,
+                         high-value-systems-corpus-v1 (Qullqa phase-0 RIGHTS.csv / Amaru, Nov 27 2026), always dropped
+       * NOT_CLEAN_ROOM  non-Khipu sets the Nov 26 audit marks "not clean-room" under an apache-2.0 tag, always dropped
        * RIGHTS_UNKNOWN  rows generated through a commercial API or a distillation teacher whose terms
                          are unchecked (*-api-*, *distill*); dropped unless --include-rights-unknown
-       * KHIPU_GATED  khipu-* rows (Khipu line is GATED, section 6); dropped unless --include-khipu
+       * KHIPU_GATED  khipu-* rows: INCLUDED by default since Nov 27 2026 (Stephen, 12:08 AM ET: "Khipu needs to
+                      be in all of them"); --exclude-khipu restores the old fail-closed drop
        * the heldout-v2 topic regex from train_frontier.py, and
        * any row matching a heldout-v1/v2 probe (exact, normalized, 5-gram near-dup, 8-gram containment, id leak).
 DPO  = answer-side counterexamples (chosen = reference answer, rejected = needless refusal) to fix the
@@ -31,10 +35,27 @@ DPO_REPO, DPO_REV = "SZLHOLDINGS/doctrine-abstention-dpo-v2", "dfe70f8ac4f4c0ac5
 # Same pattern as laptop-harness/train_frontier.py LEAK (heldout-v2 topics), kept verbatim.
 LEAK = re.compile(r"riemann hypothesis|goldbach|\bhelfgott\b|twin prime|\byitang\b|collatz|3n ?\+ ?1|legendre'?s conjecture|perfect numbers?|lonely runner|hadamard|union[- ]closed|frankl|schanuel|gilbreath|\bbeal (?:conjecture|prize)\b|graceful|reconstruction conjecture|[cč]ern[yý]|navier|\botelbayev\b|birch|swinnerton|\bbhargava\b|p ?(?:vs\.?|versus|=|≠|!=) ?np|hodge conjecture|wall[–-]sun[–-]sun|mersenne|lehmer|totient|euler[–-]mascheroni|euler'?s constant|catalan'?s constant|ap[eé]ry|(?:π|\\?pi) ?\+ ?e\b|\be ?\+ ?(?:π|\\?pi)|fermat'?s last|\bwiles\b|poincar|\bperelman\b|four[- ]colou?r|\bappel\b|\bhaken\b|kepler conjecture|\bhales\b|catalan'?s conjecture|mih[aă]ilescu|mordell|\bfaltings\b|bounded gaps|prime gaps|bieberbach|de branges|green[–-]tao|arithmetic progressions? (?:of|in) (?:the )?primes|sensitivity conjecture|duffin|koukoulopoulos|\bmaynard\b|millennium prize|clay (?:mathematics )?institute|dark matter|matter[–-]antimatter|baryon asymmetry|baryogenesis|linear [ab]\b|indus script|consciousness|dark energy|abiogenesis|origin of life|quantum gravity|hubble tension|hubble constant|anaesthe|anesthe|measurement problem|rongorongo|cosmic rays?|function of sleep|why (?:do )?we sleep|\bventris\b|\bchampollion\b|hieroglyph|\bhiggs\b|helicobacter|\bligo\b|gravitational waves?|radium", re.I)
 
+# Rights UNKNOWN per Qullqa's phase-0 audit (RIGHTS.csv, Nov 27 2026) as flagged by Amaru: mixed NC/SA provenance
+# ("not clean-room") under an apache-2.0 tag, a commercial-API teacher, or OSINT source terms. Always dropped until
+# the rights are closed out; there is no opt-in flag on purpose.
+RIGHTS_AUDIT_UNKNOWN = {"szlholdings/szl-frontier-sft-mix-v4", "szlholdings/governed-sft-mix-v2",
+                        "szlholdings/clinical-abstention-sft-api-v2", "szlholdings/high-value-systems-corpus-v1"}
+
+# Nov 26 estate audit: tagged apache-2.0 but marked "not clean-room" (mixed NC/SA provenance). Held out until Stephen
+# rules. Khipu sets with the same flag (khipu-structure-sft-v1/-v2, khipu-scholars-corpus-v1) stay IN on Stephen's
+# explicit Nov 27 directive and are flagged in the receipt instead.
+NOT_CLEAN_ROOM = {"szlholdings/unified-corpus-v1", "szlholdings/flagship55-sft-v1", "szlholdings/axiom-invariants-sft-v1",
+                  "szlholdings/axiom-invariants-sft-v2", "szlholdings/axiom-invariant-corpus-v2"}
+
+
 def policy(src):
     s = src.lower()
     if s.endswith("/governed-distill-sft-v1"):
         return "QUARANTINE"
+    if s in RIGHTS_AUDIT_UNKNOWN:
+        return "RIGHTS_AUDIT_UNKNOWN"
+    if s in NOT_CLEAN_ROOM:
+        return "NOT_CLEAN_ROOM"
     if "-api-" in s or "distill" in s:
         return "RIGHTS_UNKNOWN"
     if "/khipu" in s:
@@ -114,7 +135,9 @@ def main():
     ap.add_argument("--out", required=True, help="private output dir (not the public repo)")
     ap.add_argument("--receipt", default=os.path.join(HERE, "receipts", "data_prep.json"))
     ap.add_argument("--include-rights-unknown", action="store_true")
-    ap.add_argument("--include-khipu", action="store_true")
+    ap.add_argument("--include-khipu", dest="include_khipu", action="store_true", default=True,
+                    help="default ON (Stephen, Nov 27 2026); kept for backward-compatible invocations")
+    ap.add_argument("--exclude-khipu", dest="include_khipu", action="store_false")
     ap.add_argument("--val-frac", type=float, default=0.02)
     ap.add_argument("--dpo-answer", type=int, default=1500)
     ap.add_argument("--dpo-abstain", type=int, default=1000)
@@ -136,7 +159,7 @@ def main():
     for r in rows:
         src = r.get("src_dataset", "?")
         pol = policy(src)
-        if pol == "QUARANTINE" or (pol == "RIGHTS_UNKNOWN" and not a.include_rights_unknown) or (pol == "KHIPU_GATED" and not a.include_khipu):
+        if pol in ("QUARANTINE", "RIGHTS_AUDIT_UNKNOWN", "NOT_CLEAN_ROOM") or (pol == "RIGHTS_UNKNOWN" and not a.include_rights_unknown) or (pol == "KHIPU_GATED" and not a.include_khipu):
             drop[pol] += 1; drop_by_src[src] += 1; continue
         if LEAK.search(" ".join(m["content"] for m in r["messages"])):
             drop["LEAK_REGEX"] += 1; continue
@@ -211,7 +234,11 @@ def main():
                    "dpo_doctrine": {"repo": DPO_REPO, "revision": DPO_REV, "sha256": sha256_bytes(doc_raw), "rows": len(doc)},
                    "probes_v1_sha256": sha256_file(a.probes_v1), "probes_v2_sha256": sha256_file(a.probes_v2),
                    "probes_rows": len(probes), "leak_regex_sha256": sha256_bytes(LEAK.pattern.encode())},
-        "policy": {"include_rights_unknown": a.include_rights_unknown, "include_khipu": a.include_khipu, "seed": a.seed},
+        "policy": {"include_rights_unknown": a.include_rights_unknown, "include_khipu": a.include_khipu, "seed": a.seed,
+                   "rights_audit_unknown": sorted(RIGHTS_AUDIT_UNKNOWN), "not_clean_room_dropped": sorted(NOT_CLEAN_ROOM),
+                   "flagged_included": {"khipu not-clean-room (owner directive Nov 27 2026; release HOLD until ruled)":
+                                        ["SZLHOLDINGS/khipu-structure-sft-v1", "SZLHOLDINGS/khipu-structure-sft-v2"],
+                                        "share-alike cc-by-sa-4.0 (attribution + SA obligations on release)": ["SZLHOLDINGS/absrl-reward-squad2-v1", "openprob:wikipedia"]}},
         "dropped": dict(drop), "dropped_by_policy_source": dict(drop_by_src),
         "outputs": {n: {"sha256": sha256_file(p), "rows": sum(1 for _ in open(p, encoding="utf-8"))} for n, p in paths.items()},
         "sft_per_source_top": Counter(r["source_dataset"] for r in train).most_common(12),
