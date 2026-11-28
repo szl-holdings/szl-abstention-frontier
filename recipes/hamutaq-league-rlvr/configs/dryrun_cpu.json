@@ -1,0 +1,128 @@
+{
+ "schema": "szl.league.config/v1",
+ "lora": {
+  "alpha": 32,
+  "targets": [
+   "q_proj",
+   "k_proj",
+   "v_proj",
+   "o_proj",
+   "gate_proj",
+   "up_proj",
+   "down_proj",
+   "in_proj_qkv",
+   "in_proj_z",
+   "out_proj"
+  ]
+ },
+ "lr": 2e-05,
+ "num_generations": 2,
+ "prompts_per_round": 2,
+ "max_new_tokens": 12,
+ "temperature": 1.0,
+ "micro_batch": 2,
+ "exploit_share": 0.25,
+ "dev_eval_n": 4,
+ "merged_base_dir": "MERGED_BASE_DIR",
+ "name": "dryrun-cpu",
+ "policies": [
+  {
+   "name": "m2_kalai_full",
+   "role": "main",
+   "loss": "dapo",
+   "eps_low": 0.2,
+   "eps_high": 0.28,
+   "scale_rewards": "batch",
+   "components": [
+    "task",
+    "proof",
+    "report",
+    "format"
+   ],
+   "t_schedule": "curriculum",
+   "t_none_frac": 0.25,
+   "report_frac": 0.5,
+   "seed": 11,
+   "task_weights": {
+    "grounded": 1.0,
+    "squad": 1.0,
+    "khipu_compute": 0.6,
+    "khipu_route": 0.3,
+    "openprob": 0.6,
+    "receipt_claim": 0.5,
+    "false_premise": 0.3
+   },
+   "steps_per_generation": 2,
+   "mask_truncated": true
+  },
+  {
+   "name": "m4_drgrpo_full",
+   "role": "main",
+   "loss": "dr_grpo",
+   "eps_low": 0.2,
+   "eps_high": 0.28,
+   "scale_rewards": "none",
+   "components": [
+    "task",
+    "proof",
+    "report",
+    "format"
+   ],
+   "t_schedule": "curriculum",
+   "t_none_frac": 0.25,
+   "report_frac": 0.5,
+   "seed": 11,
+   "task_weights": {
+    "grounded": 1.0,
+    "squad": 1.0,
+    "khipu_compute": 0.6,
+    "khipu_route": 0.3,
+    "openprob": 0.6,
+    "receipt_claim": 0.5,
+    "false_premise": 0.3
+   },
+   "steps_per_generation": 2,
+   "mask_truncated": true
+  },
+  {
+   "name": "m5_gspo_full",
+   "role": "main",
+   "loss": "gspo",
+   "eps_low": 0.0003,
+   "eps_high": 0.0004,
+   "scale_rewards": "batch",
+   "components": [
+    "task",
+    "proof",
+    "report",
+    "format"
+   ],
+   "t_schedule": "curriculum",
+   "t_none_frac": 0.25,
+   "report_frac": 0.5,
+   "seed": 11,
+   "task_weights": {
+    "grounded": 1.0,
+    "squad": 1.0,
+    "khipu_compute": 0.6,
+    "khipu_route": 0.3,
+    "openprob": 0.6,
+    "receipt_claim": 0.5,
+    "false_premise": 0.3
+   },
+   "steps_per_generation": 2,
+   "mask_truncated": true
+  },
+  {
+   "name": "x_exploiter",
+   "role": "exploiter",
+   "loss": "dapo",
+   "eps_low": 0.2,
+   "eps_high": 0.28,
+   "scale_rewards": "batch",
+   "seed": 99,
+   "steps_per_generation": 1,
+   "mask_truncated": true
+  }
+ ]
+}

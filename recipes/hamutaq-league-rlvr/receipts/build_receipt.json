@@ -1,0 +1,157 @@
+{
+ "schema": "szl.rlvr.build-receipt/v1",
+ "status": "MEASURED",
+ "signature": "UNSIGNED",
+ "verifier_version": "hamutaq-league-rlvr/rewards@1",
+ "verifier_sha256": "6994c5678d97b0c50ef12498b1ab8021b708f627e7a66519a20d612e69b04b63",
+ "builder_sha256": "aae46b7b46e37d241ab10ba23e8cae14c1ad84342ddd82432ece9588e5435acc",
+ "seed": 20261127,
+ "sources": {
+  "governed-grounded-sft-v1": {
+   "repo": "SZLHOLDINGS/governed-grounded-sft-v1",
+   "revision": "8e466f849954a971a138ead89e49b5f9558f8c39",
+   "sha256": "ec5eaf2630c8a9809524b21bfc48fccf18d01673700511df691b4728a544743f",
+   "license": "apache-2.0",
+   "rights": "RIGHTS_OK",
+   "used": true
+  },
+  "absrl-reward-pool-v2-1": {
+   "repo": "SZLHOLDINGS/absrl-reward-pool-v2-1",
+   "revision": "cdbc6b91e25dda733e6ac4af4ec6a0c865655268",
+   "sha256": "e9ff2cbc194e993d9cfbcd49ec43d7f68ba2bf3b629f4c94f130a2964a599c79",
+   "license": "apache-2.0",
+   "rights": "RIGHTS_OK",
+   "used": true
+  },
+  "absrl-reward-squad2-v1": {
+   "repo": "SZLHOLDINGS/absrl-reward-squad2-v1",
+   "revision": "2229e259b0333928ff4c07f13e3540ae70e39567",
+   "sha256": "5de79f86ecaa0e5da41286a4fbd020aafb23a61ceab43e008d1d5e172f849a99",
+   "license": "cc-by-sa-4.0",
+   "rights": "RIGHTS_OK_SHARE_ALIKE",
+   "used": false
+  },
+  "khipu-structure-sft-v3": {
+   "repo": "SZLHOLDINGS/khipu-structure-sft-v3",
+   "revision": "5f132a078aa89f79836d4950554d631a1af13885",
+   "sha256": "bee9baa1ec4a0c29328085bed3c521cd81a5fec4957a4d1a4fc96ec8b4259a5f",
+   "license": "mit",
+   "rights": "RIGHTS_OK",
+   "used": true
+  },
+  "khipu-v2-abstention-curriculum/train.abstain": {
+   "repo": "SZLHOLDINGS/khipu-v2-abstention-curriculum",
+   "revision": "8066f2ed025cf3ac0ba565d57596dc65596cdfcb",
+   "sha256": "e4fb22e9e13e8016c7e1fd5aebc71e109195bf774b67650c9b0d6d724c7b4d36",
+   "license": "apache-2.0",
+   "rights": "RIGHTS_OK",
+   "used": true
+  },
+  "khipu-v2-abstention-curriculum/adversarial": {
+   "repo": "SZLHOLDINGS/khipu-v2-abstention-curriculum",
+   "revision": "8066f2ed025cf3ac0ba565d57596dc65596cdfcb",
+   "sha256": "8ae9fed7f8bb85234b0bbad217ddb2b7018670b8c80974f58aed95bc3faa0f1d",
+   "license": "apache-2.0",
+   "rights": "RIGHTS_OK",
+   "used": true
+  },
+  "szl-distill-abstention-v1-sft": {
+   "repo": "SZLHOLDINGS/szl-distill-abstention-v1-sft",
+   "revision": "72a471e38dafd7244719f18d351d0bf6974d3a7d",
+   "sha256": "30e74cc368eb6d4ccf30795789b6fdbf9e63aee1e8515c354e114866a57e48fe",
+   "license": "apache-2.0",
+   "rights": "API_TEACHER_ALLOWED_STEPHEN_t186u",
+   "used": true
+  },
+  "doctrine-abstention-dpo-v2": {
+   "repo": "SZLHOLDINGS/doctrine-abstention-dpo-v2",
+   "revision": "dfe70f8ac4f4c0ac5c06218482290f1960af9932",
+   "sha256": "0229224a9a4759d21a34d5d4c69455567adf4311c635ac8d143524597ed17914",
+   "license": "apache-2.0",
+   "rights": "RIGHTS_OK",
+   "used": true
+  }
+ },
+ "formal_conjectures": {
+  "repo": "google-deepmind/formal-conjectures",
+  "commit": "b576d527b271b936f9e61c0e367c302d7386bc80",
+  "license": "apache-2.0"
+ },
+ "excluded_by_policy": "szl-frontier-sft-mix-v4|governed-sft-mix-v2|clinical-abstention-sft-api-v2|szl-frontier-openprob-mix-v1|szl-open-problems-v1|khipu-structure-sft-v[12]\\b|-sft-api-|governed-distill-sft-v1|absrl-doubt-claude",
+ "sealed": {
+  "probes_sha256": {
+   "v1": "2f498461a67d7a2910472dabda1d72c4a7c73fe065702cba94e988fb30e34097",
+   "v2": "7da9ac5a477610ae9c7662f0b03a0fe57853419e41f393d0afceaaa09df97f33"
+  },
+  "probe_count": 124,
+  "decon_method": "normalized exact-substring + 13-gram any + 8-gram>=50% of probe",
+  "decon_hits": {
+   "13gram": 8,
+   "8gram50": 1
+  },
+  "verdict": "CLEAN_AFTER_DROP",
+  "blocklist_sha256": "d6529130e5ca0ce5831fecb990389f29a16d20c4ba82498b297a198860f3a4b7",
+  "khipu_eval_excluded_khipus": 61
+ },
+ "api_teacher_rows": 39,
+ "api_teacher_note": "szl-distill-abstention-v1-sft rows tagged api_teacher; allowed by Stephen t186u; provider terms limit training competing models - check before commercial release",
+ "drops": {
+  "grounded_no_source": 1,
+  "receipt_no_theorem": 38,
+  "absrl-reward-pool-v2-1_proposed_heldout": 343,
+  "khipu_tier_okr-structure-qa_not_verifiable": 550,
+  "khipu_cipher_not_recomputable": 18,
+  "khipu_route_proposed_heldout": 8,
+  "doctrine-abstention-dpo-v2_proposed_heldout": 7,
+  "fc_doc_len": 707,
+  "fc_heldout_v2_topic": 227,
+  "duplicate_prompt": 58,
+  "decon_probe_overlap": 9
+ },
+ "pool_rows": 12069,
+ "dev_rows": 355,
+ "pool_by_task_label": {
+  "false_premise/ABSTAIN": 85,
+  "grounded/ABSTAIN": 1758,
+  "grounded/ANSWER": 2621,
+  "khipu_compute/ABSTAIN": 86,
+  "khipu_compute/ANSWER": 1699,
+  "khipu_route/ABSTAIN": 81,
+  "openprob/OPEN": 1224,
+  "openprob/SOLVED": 1091,
+  "receipt_claim/UNVERIFIED": 250,
+  "receipt_claim/VERIFIED": 198,
+  "squad/ABSTAIN": 1683,
+  "squad/ANSWER": 1293
+ },
+ "pool_by_source": {
+  "absrl-reward-pool-v2-1": 2976,
+  "doctrine-abstention-dpo-v2": 49,
+  "formal-conjectures": 1705,
+  "formal-conjectures(proof-request)": 610,
+  "governed-grounded-sft-v1": 4379,
+  "khipu-structure-sft-v3": 1699,
+  "khipu-structure-sft-v3(truncated-twin)": 86,
+  "khipu-v2-abstention-curriculum/adversarial": 30,
+  "khipu-v2-abstention-curriculum/train.abstain": 51,
+  "szl-distill-abstention-v1-sft": 36,
+  "t3-synthetic(governed-grounded-sft-v1)": 448
+ },
+ "dev_v3_commit": {
+  "sha256_of_file_is_hidden_until_reveal": true,
+  "commitment": "1497f0e98213a5d2032bffc4981702317c8165c3e8fbec0bd631119f9f997873",
+  "scheme": "sha256(salt_hex + sha256(dev_v3.jsonl))"
+ },
+ "census_mix": {
+  "path": null,
+  "rows": 0,
+  "used": 0,
+  "sft_only_not_rl_verifiable": {},
+  "denied": {}
+ },
+ "files": {
+  "pool.jsonl": "5ae624330923753da00330684eb487d18fa923f3aa10e6cea247711cd13559bc",
+  "receipt_store.json": "fc088e02583f075c00da83072e3b9654dea206d137af328c888ba4ae4617efbd",
+  "sealed_blocklist.json": "d6529130e5ca0ce5831fecb990389f29a16d20c4ba82498b297a198860f3a4b7"
+ }
+}
