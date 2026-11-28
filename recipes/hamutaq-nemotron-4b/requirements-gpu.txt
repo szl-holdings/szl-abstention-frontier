@@ -1,0 +1,16 @@
+# GPU training/eval image for recipes/hamutaq-nemotron-4b. Build once, record `pip freeze`, push to a
+# private registry and pin the image by digest in the launch request (runtime.image). The launcher refuses
+# an image without @sha256.
+# Verified on CPU (dry-run, Nov 26 2026): transformers 5.24.1, peft 0.22.0, safetensors 0.8.0, tokenizers 0.23.3.
+# GPU stack below is NOT yet verified on a GPU: it matches the prebuilt mamba-ssm v2.3.2.post1 wheels
+# (cu12 + torch 2.10, cxx11abi TRUE, cp312) so nothing compiles on a paid GPU.
+torch==2.10.*            # CUDA 12 build
+transformers==5.24.1
+peft==0.22.0
+safetensors==0.8.0
+tokenizers==0.23.3
+huggingface_hub==2.5.0
+jinja2==3.1.6
+mamba-ssm==2.3.2.post1   # install the prebuilt wheel from github.com/state-spaces/mamba/releases (cu12torch2.10, cp312)
+causal-conv1d==1.7.0     # prebuilt wheel matching torch 2.10 / cu12
+einops

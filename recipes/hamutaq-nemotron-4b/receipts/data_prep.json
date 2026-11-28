@@ -1,0 +1,192 @@
+{
+ "schema": "szl.hamutaq.data-prep/v1",
+ "status": "MEASURED",
+ "signature": "UNSIGNED",
+ "at": "2026-11-27T06:56:18.472967+00:00",
+ "inputs": {
+  "mix": {
+   "repo": "SZLHOLDINGS/szl-frontier-openprob-mix-v1",
+   "revision": "f2565bac0e437511270a28202086d18ca38d0ebc",
+   "sha256": "7538b87a173e4dd6fdfa1c2895d8a76cb035d7e2425c91777355d7690e3555d6",
+   "rows": 26321
+  },
+  "khipu_v3": {
+   "repo": "SZLHOLDINGS/khipu-structure-sft-v3",
+   "revision": "5f132a078aa89f79836d4950554d631a1af13885",
+   "sha256": "bee9baa1ec4a0c29328085bed3c521cd81a5fec4957a4d1a4fc96ec8b4259a5f",
+   "used": true
+  },
+  "dpo_doctrine": {
+   "repo": "SZLHOLDINGS/doctrine-abstention-dpo-v2",
+   "revision": "dfe70f8ac4f4c0ac5c06218482290f1960af9932",
+   "sha256": "0229224a9a4759d21a34d5d4c69455567adf4311c635ac8d143524597ed17914",
+   "rows": 62
+  },
+  "probes_v1_sha256": "2f498461a67d7a2910472dabda1d72c4a7c73fe065702cba94e988fb30e34097",
+  "probes_v2_sha256": "7da9ac5a477610ae9c7662f0b03a0fe57853419e41f393d0afceaaa09df97f33",
+  "probes_rows": 124,
+  "leak_regex_sha256": "bce8da3ad82a29c00f13753b647481f3d4203b10e839f632d8707058cf8eba3a"
+ },
+ "policy": {
+  "include_rights_unknown": false,
+  "include_khipu": true,
+  "seed": 20261126,
+  "rights_audit_unknown": [
+   "szlholdings/clinical-abstention-sft-api-v2",
+   "szlholdings/governed-sft-mix-v2",
+   "szlholdings/high-value-systems-corpus-v1",
+   "szlholdings/szl-frontier-sft-mix-v4"
+  ],
+  "not_clean_room_dropped": [
+   "szlholdings/axiom-invariant-corpus-v2",
+   "szlholdings/axiom-invariants-sft-v1",
+   "szlholdings/axiom-invariants-sft-v2",
+   "szlholdings/flagship55-sft-v1",
+   "szlholdings/unified-corpus-v1"
+  ],
+  "flagged_included": {
+   "not-for-release: residual clinical/PHI review flag (Amaru ASSETS.csv USE-WITH-CONDITIONS)": [
+    "SZLHOLDINGS/khipu-structure-sft-v3"
+   ],
+   "share-alike cc-by-sa-4.0 (attribution + SA obligations on release)": [
+    "SZLHOLDINGS/absrl-reward-squad2-v1",
+    "openprob:wikipedia"
+   ]
+  }
+ },
+ "dropped": {
+  "RIGHTS_AUDIT_UNKNOWN": 2203,
+  "LABEL_BUG": 1600,
+  "RIGHTS_UNKNOWN": 793,
+  "NOT_CLEAN_ROOM": 1785,
+  "LEAK_REGEX": 134,
+  "QUARANTINE": 1,
+  "PROBE_ID_LEAK": 2,
+  "DPO_DOCTRINE_PROBE_MATCH": 0
+ },
+ "dropped_by_policy_source": {
+  "SZLHOLDINGS/szl-frontier-sft-mix-v4": 800,
+  "SZLHOLDINGS/khipu-structure-sft-v1": 800,
+  "SZLHOLDINGS/killinchu-osint-sft-api-v1": 128,
+  "SZLHOLDINGS/khipu-structure-sft-v2": 800,
+  "SZLHOLDINGS/unified-corpus-v1": 800,
+  "SZLHOLDINGS/governed-sft-mix-v2": 747,
+  "SZLHOLDINGS/szl-distill-abstention-v3-calib": 80,
+  "SZLHOLDINGS/axiom-invariants-sft-v1": 92,
+  "SZLHOLDINGS/axiom-invariants-sft-v2": 93,
+  "SZLHOLDINGS/flagship55-sft-v1": 800,
+  "SZLHOLDINGS/high-value-systems-corpus-v1": 505,
+  "SZLHOLDINGS/physics-tutor-sft-api-v1": 151,
+  "SZLHOLDINGS/world-science-sft-api-v1": 68,
+  "SZLHOLDINGS/clinical-abstention-sft-api-v2": 151,
+  "SZLHOLDINGS/szl-distill-abstention-v1": 47,
+  "SZLHOLDINGS/creativity-sft-api-v2": 116,
+  "SZLHOLDINGS/acoustic-governance-sft-api-v1": 99,
+  "SZLHOLDINGS/governed-distill-4b-sft-v1": 4,
+  "SZLHOLDINGS/governed-distill-4b-sft-v3": 28,
+  "SZLHOLDINGS/governed-distill-4b-sft-v3-topup": 15,
+  "SZLHOLDINGS/szl-distill-abstention-v2-sft": 18,
+  "SZLHOLDINGS/clinical-abstention-sft-api-v1": 37,
+  "SZLHOLDINGS/governed-distill-sft-v1": 1,
+  "SZLHOLDINGS/governed-distill-4b-sft-v2": 2
+ },
+ "outputs": {
+  "sft_train.jsonl": {
+   "sha256": "36b7ac06aa86256ba500221ebbf488abedb160543bbf3febcc077d33077c6cd6",
+   "rows": 21668
+  },
+  "sft_val.jsonl": {
+   "sha256": "ab2b87f8377e6ed5fc6d953b51e52540bbcbb4fe50e6aa93d4b513f1ee21e326",
+   "rows": 442
+  },
+  "dpo_train.jsonl": {
+   "sha256": "a6f8855794d602b2404ccf9bc151706d2b4cbb971a2320cc60554d8f4828aa91",
+   "rows": 2500
+  }
+ },
+ "sft_per_source_top": [
+  [
+   "SZLHOLDINGS/khipu-structure-sft-v3",
+   2264
+  ],
+  [
+   "SZLHOLDINGS/absrl-reward-squad2-v1",
+   1534
+  ],
+  [
+   "openprob:fc-grounded",
+   1172
+  ],
+  [
+   "openprob:wikipedia",
+   1037
+  ],
+  [
+   "SZLHOLDINGS/frontier-mix-v6-rebalanced",
+   788
+  ],
+  [
+   "SZLHOLDINGS/muhu-methodology-sft-v2",
+   788
+  ],
+  [
+   "SZLHOLDINGS/unified-corpus-v2",
+   783
+  ],
+  [
+   "SZLHOLDINGS/vgl-triang-20261116",
+   783
+  ],
+  [
+   "SZLHOLDINGS/cram-sudoku-extreme-sft-v1",
+   779
+  ],
+  [
+   "SZLHOLDINGS/szl-quant-sft-v1",
+   776
+  ],
+  [
+   "SZLHOLDINGS/lean-math-sft-v1",
+   776
+  ],
+  [
+   "SZLHOLDINGS/physics-curriculum-train",
+   776
+  ]
+ ],
+ "dpo_sides": {
+  "answer": 1500,
+  "abstain": 1000
+ },
+ "dpo_doctrine_pairs": 62,
+ "dpo_note": "rejected sides are templated refusals/fabrications (offline proxy), not model samples",
+ "holdout": {
+  "rows": 124,
+  "sha256": "42366694d2e7ebdfe3ac5c197017ff6820dc0dd655a3aed4afbf1ff67e09ce83",
+  "seal_sha256": "d9e36a6c9d0f3e82afedf133b198bde0c3f4d1073a8278f3c7a8528616ae5d8c"
+ },
+ "contamination_gate": {
+  "tool": "szl-forge tools/contamination_gate.py (PR #795 head 65c3ade6, vendored)",
+  "sft": {
+   "verdict": "CLEAN_NOT_LAUNCHED",
+   "codes": [],
+   "report_sha256": "818d86476acd189cf903d773c5a499f82c63d095a4c4e67c0e9978afa96ea44e",
+   "train_sha256": "36b7ac06aa86256ba500221ebbf488abedb160543bbf3febcc077d33077c6cd6",
+   "holdout_sha256": "42366694d2e7ebdfe3ac5c197017ff6820dc0dd655a3aed4afbf1ff67e09ce83"
+  },
+  "sft_val": {
+   "verdict": "CLEAN_NOT_LAUNCHED",
+   "codes": [],
+   "report_sha256": "fcc36030e57afcd9455f02bbb6f8a7bf9e64e5f5119c403435288b13288ddff1",
+   "train_sha256": "ab2b87f8377e6ed5fc6d953b51e52540bbcbb4fe50e6aa93d4b513f1ee21e326",
+   "holdout_sha256": "42366694d2e7ebdfe3ac5c197017ff6820dc0dd655a3aed4afbf1ff67e09ce83"
+  },
+  "dpo": {
+   "verdict": "CLEAN_NOT_LAUNCHED",
+   "codes": [],
+   "report_sha256": "149525f6bf2bb53234fe62ad2fc025d93bb707ff8dc2b6ee58bd982940b2c5a6",
+   "train_sha256": "21aadd5e52e5eb36b1e8ed5fddf05e0a653603e49d0c9bae0f8d27c5ffb4edb5",
+   "holdout_sha256": "42366694d2e7ebdfe3ac5c197017ff6820dc0dd655a3aed4afbf1ff67e09ce83"
+  }
+ }
+}

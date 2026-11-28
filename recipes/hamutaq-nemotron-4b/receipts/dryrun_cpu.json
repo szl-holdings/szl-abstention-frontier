@@ -1,0 +1,215 @@
+{
+ "schema": "szl.hamutaq.dryrun-cpu/v1",
+ "at": "2026-11-27T04:40:32.307342+00:00",
+ "base": {
+  "repo": "nvidia/NVIDIA-Nemotron-3-Nano-4B-BF16",
+  "revision": "dfaf35de3e30f1867dd8dbc38a7fc9fb52d3914f"
+ },
+ "versions": {
+  "torch": "2.15.0+cpu",
+  "transformers": "5.24.1",
+  "python": "3.13.5"
+ },
+ "full_shape_check": {
+  "checkpoint_tensors": 262,
+  "model_params": 263,
+  "missing_in_model": [],
+  "shape_mismatches": [],
+  "model_params_not_in_checkpoint": [],
+  "params_total": 3973556832,
+  "linear_modules": {
+   "in_proj": {
+    "count": 21,
+    "shape_out_in": [
+     17504,
+     3136
+    ]
+   },
+   "out_proj": {
+    "count": 21,
+    "shape_out_in": [
+     3136,
+     7680
+    ]
+   },
+   "up_proj": {
+    "count": 17,
+    "shape_out_in": [
+     12544,
+     3136
+    ]
+   },
+   "down_proj": {
+    "count": 17,
+    "shape_out_in": [
+     3136,
+     12544
+    ]
+   },
+   "q_proj": {
+    "count": 4,
+    "shape_out_in": [
+     5120,
+     3136
+    ]
+   },
+   "k_proj": {
+    "count": 4,
+    "shape_out_in": [
+     1024,
+     3136
+    ]
+   },
+   "v_proj": {
+    "count": 4,
+    "shape_out_in": [
+     1024,
+     3136
+    ]
+   },
+   "o_proj": {
+    "count": 4,
+    "shape_out_in": [
+     3136,
+     5120
+    ]
+   },
+   "lm_head": {
+    "count": 1,
+    "shape_out_in": [
+     131072,
+     3136
+    ]
+   }
+  },
+  "ok": true
+ },
+ "lora": {
+  "targets": [
+   "q_proj",
+   "k_proj",
+   "v_proj",
+   "o_proj",
+   "up_proj",
+   "down_proj"
+  ],
+  "trainable_params_r32_est": 20238336
+ },
+ "tiny_checkpoint": {
+  "source_layers": [
+   0,
+   1,
+   12
+  ],
+  "pattern": "M-*",
+  "bytes_fetched": 2036681792,
+  "fetch_seconds": 13.5
+ },
+ "native_load": {
+  "class": "NemotronHForCausalLM",
+  "missing_keys": [],
+  "unexpected_keys": [],
+  "mismatched_keys": [],
+  "error_msgs": [],
+  "ok": true
+ },
+ "template": {
+  "prompt_off_tail": "estion open?<|im_end|>\n<|im_start|>assistant\n<think></think>",
+  "prompt_on_tail": " toy question open?<|im_end|>\n<|im_start|>assistant\n<think>\n",
+  "full_render_tail": "\n<|im_start|>assistant\n<think></think>It is open.<|im_end|>\n",
+  "consistent": true,
+  "eos": "<|im_end|>",
+  "eos_id": 11,
+  "pad_id": null
+ },
+ "forward_real_weights": {
+  "logits_shape": [
+   1,
+   25,
+   131072
+  ],
+  "finite": true
+ },
+ "tokenized": {
+  "sft_train.jsonl": {
+   "rows": 22776,
+   "tokens": 6964922,
+   "median": 178.0,
+   "p95": 979,
+   "max": 5013,
+   "over_2048": 159,
+   "tokens_le_2048": 6414221
+  },
+  "sft_val.jsonl": {
+   "rows": 464,
+   "tokens": 157645,
+   "median": 196.5,
+   "p95": 1125,
+   "max": 4939,
+   "over_2048": 6,
+   "tokens_le_2048": 134896
+  },
+  "dpo_train.jsonl": {
+   "pairs": 2492,
+   "tokens_both_sides": 935995,
+   "max": 1239
+  }
+ },
+ "e2e": {
+  "train_sft": {
+   "rc": 0,
+   "seconds": 18.8
+  },
+  "train_dpo": {
+   "rc": 0,
+   "seconds": 11.8
+  },
+  "run_eval": {
+   "rc": 0,
+   "seconds": 6.8
+  },
+  "sft_receipt": {
+   "status": "MEASURED",
+   "steps": 2,
+   "trainable_params": 1798144,
+   "lora_targets": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "up_proj",
+    "down_proj"
+   ],
+   "loss": {
+    "first": 11.3903,
+    "last": 11.5877,
+    "curve": [
+     11.3903,
+     11.5877
+    ]
+   },
+   "val_loss": 13.4266,
+   "tokens": 2147,
+   "tok_per_s": 152.2
+  },
+  "dpo_receipt": {
+   "status": "MEASURED",
+   "steps": 1,
+   "loss": {
+    "first": 0.6666,
+    "last": 0.6666,
+    "curve": [
+     0.6666
+    ]
+   },
+   "reward_acc_last": 0.5
+  },
+  "eval_leaderboard_models": [
+   "base",
+   "sft+dpo"
+  ],
+  "eval_entries_blocked": []
+ },
+ "note": "CPU, 3 real blocks of 42, toy batches: validates code paths, shapes and data, NOT quality or GPU memory.",
+ "ok": true
+}

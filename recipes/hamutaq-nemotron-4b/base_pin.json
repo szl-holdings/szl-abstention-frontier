@@ -1,0 +1,169 @@
+{
+ "schema": "szl.hamutaq.base-pin/v1",
+ "recorded_at": "2026-11-27T04:06:00Z",
+ "repo": "nvidia/NVIDIA-Nemotron-3-Nano-4B-BF16",
+ "revision": "dfaf35de3e30f1867dd8dbc38a7fc9fb52d3914f",
+ "gated": false,
+ "files": {
+  "model.safetensors": {
+   "bytes": 7947142640,
+   "sha256": "55d4e2519456c4a9bddf596b0748d630e3b2ce6ff6f4c2b7ed3e07e2b00dad42",
+   "source": "x-linked-etag (LFS sha256)"
+  },
+  "config.json": {
+   "sha256": "fde9241f66cd414458df444a80eb535f53aef2b4b240a91f092e651fa6f27219"
+  },
+  "chat_template.jinja": {
+   "sha256": "ab7813c3abdd9cb655905a410728b26c7884eca45ddfab8d9f931553485a7862"
+  },
+  "tokenizer.json": {
+   "sha256": "623c34567aebb18582765289fbe23d901c62704d6518d71866e0e58db892b5b7"
+  },
+  "tokenizer_config.json": {
+   "sha256": "48de4056b0b17de26e03232fdc1f55b70595c9354ceb2ed061f724f45620aa41"
+  },
+  "special_tokens_map.json": {
+   "sha256": "e3a4f63da745f02317a45e00e6476c17fc66ac41faf14bb1b0be1f3211b0ca53"
+  },
+  "generation_config.json": {
+   "sha256": "4892b7a6418b50ad6854010881854d536c3efff148324455ad6535061aad28c5"
+  },
+  "modeling_nemotron_h.py": {
+   "sha256": "ea982af0b805f181573f919ecb001d5bbc0153459923cf4b2f1ccae194e415a4"
+  },
+  "configuration_nemotron_h.py": {
+   "sha256": "07fa66e5b3da7e6a71c1a263e3dd68da11c8afa9178b47c49510ba628746fcff"
+  },
+  "README.md": {
+   "sha256": "06f349f02b364c5ff6d92562be82ddd190e00b7e161a749c297766d372068c18"
+  }
+ },
+ "architecture": {
+  "class": "NemotronHForCausalLM",
+  "model_type": "nemotron_h",
+  "type": "Mamba-2 / Transformer hybrid (Nemotron-H); compressed from Nemotron-Nano-9B-v2 with Nemotron Elastic",
+  "params": 3973556832,
+  "hidden_size": 3136,
+  "blocks": 42,
+  "hybrid_override_pattern": "M-M-M-MM-M-M*-M-M*-M-M-M*-M-M-MM*-MMM-M-M-",
+  "block_counts": {
+   "mamba2": 21,
+   "mlp": 17,
+   "attention": 4
+  },
+  "attention": {
+   "heads": 40,
+   "kv_heads": 8,
+   "head_dim": 128
+  },
+  "mamba": {
+   "heads": 96,
+   "head_dim": 80,
+   "state": 128,
+   "groups": 8,
+   "conv_kernel": 4,
+   "chunk_size": 256
+  },
+  "mlp": {
+   "intermediate": 12544,
+   "act": "relu2",
+   "gated": false
+  },
+  "vocab": 131072,
+  "max_position_embeddings": 262144,
+  "tie_word_embeddings": false,
+  "linear_modules": {
+   "in_proj": [
+    21,
+    [
+     17504,
+     3136
+    ]
+   ],
+   "out_proj": [
+    21,
+    [
+     3136,
+     7680
+    ]
+   ],
+   "up_proj": [
+    17,
+    [
+     12544,
+     3136
+    ]
+   ],
+   "down_proj": [
+    17,
+    [
+     3136,
+     12544
+    ]
+   ],
+   "q_proj": [
+    4,
+    [
+     5120,
+     3136
+    ]
+   ],
+   "k_proj": [
+    4,
+    [
+     1024,
+     3136
+    ]
+   ],
+   "v_proj": [
+    4,
+    [
+     1024,
+     3136
+    ]
+   ],
+   "o_proj": [
+    4,
+    [
+     3136,
+     5120
+    ]
+   ]
+  },
+  "checkpoint_key_prefix": "backbone.* (native transformers maps to model.*)"
+ },
+ "chat": {
+  "format": "ChatML <|im_start|>/<|im_end|>",
+  "eos_token": "<|im_end|>",
+  "eos_token_id": 11,
+  "pad_token": null,
+  "reasoning_toggle": "chat-template kwarg enable_thinking (default True); there is no /think or /no_think system-prompt switch in this revision's template",
+  "reasoning_on_generation_prefix": "<|im_start|>assistant\n<think>\n",
+  "reasoning_off_generation_prefix": "<|im_start|>assistant\n<think></think>",
+  "system_prompt": "optional; rendered as <|im_start|>system\n...; tools are appended to it",
+  "recommended_sampling": "reasoning: temperature 1.0 top_p 0.95; tool calling: temperature 0.6 top_p 0.95 (card)"
+ },
+ "license": {
+  "name": "NVIDIA Nemotron Open Model License",
+  "card_license": "other / nvidia-nemotron-open-model-license",
+  "url": "https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-nemotron-open-model-license/",
+  "version": "December 15, 2025",
+  "commercial_use": true,
+  "derivatives": true,
+  "redistribution_conditions": [
+   "give recipients a copy of the License (3a)",
+   "retain NVIDIA copyright/patent/trademark/attribution notices (3b)",
+   "include a Notice text file with: 'Licensed by NVIDIA Corporation under the NVIDIA Nemotron Model License.' (3c)"
+  ],
+  "note": "the repo's LICENSE file at this revision is 0 bytes; ship the License text from the URL with any derivative"
+ },
+ "software": {
+  "transformers": "native NemotronH in transformers 5.x (CPU dry-run on 5.24.1, no trust_remote_code); card snippet uses trust_remote_code=True and says tested on 4.48.3; config says 4.53.0",
+  "remote_code_caveat": "modeling_nemotron_h.py at this revision raises ImportError if mamba-ssm is missing (unconditional rmsnorm_fn import), so it cannot run on CPU; the native class falls back to PyTorch reference kernels",
+  "gpu_kernels": [
+   "mamba-ssm (selective_state_update, mamba_chunk_scan_combined, mamba_split_conv1d_scan_combined, rmsnorm_fn)",
+   "causal-conv1d (causal_conv1d_fn, causal_conv1d_update)"
+  ],
+  "vllm": ">=0.15.1 with nano_v3 reasoning parser and --mamba_ssm_cache_dtype float32 (card)"
+ }
+}
